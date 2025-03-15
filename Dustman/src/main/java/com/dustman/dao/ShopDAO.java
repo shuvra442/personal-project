@@ -1,11 +1,12 @@
 package com.dustman.dao;
 
 
-import com.dustman.dto.shop.AddShopDTO;
-import com.dustman.dto.user.UpdateRole;
+import com.dustman.dto.AddShopDTO;
+import com.dustman.dto.UserDTO;
 import com.dustman.model.ShopDetails;
 import com.dustman.utils.Role;
 import com.dustman.utils.rowmapper.ShopRowMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,20 +27,10 @@ public class ShopDAO {
 
     public boolean addShop(AddShopDTO addShopDTO) {
 
-        boolean status = userDAO.updateRole(new UpdateRole(addShopDTO.owner(), Role.SHOPKEEPER));
+        boolean status = userDAO.updateRole(new UserDTO(addShopDTO.shopId(), Role.SHOPKEEPER));
         if (status) {
             String addShopSQL = "INSERT INTO `Dustman`.`shop_details` (`activate`, `online`, `create_time`, `shop_address`, `shop_capacity`, `shop_id`, `shop_image_id`, `shop_image_url`, `shop_name`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            int result = jdbcTemplate.update(addShopSQL,
-                    true,
-                    true,
-                    new Timestamp(System.currentTimeMillis()),
-                    addShopDTO.shopAddress(),
-                    addShopDTO.shopCapacity(),
-                    UUID.randomUUID().toString(),
-                    addShopDTO.shopImageId(),
-                    addShopDTO.shopImageUrl(),
-                    addShopDTO.shopName(),
-                    addShopDTO.owner());
+            int result = jdbcTemplate.update(addShopSQL, true, true, new Timestamp(System.currentTimeMillis()), addShopDTO.shopAddress(), addShopDTO.shopCapacity(), UUID.randomUUID().toString(), addShopDTO.shopImageId(), addShopDTO.shopImageUrl(), addShopDTO.shopName(), addShopDTO.shopId());
             return result > 0;
         }
         return false;
@@ -48,35 +39,26 @@ public class ShopDAO {
 
     public boolean updateShop(AddShopDTO addShopDTO) {
         String sql = "UPDATE `Dustman`.`shop_details` SET `update_time` = ?, `shop_address` = ?, `shop_capacity` = ?, `shop_image_id` = ?, `shop_image_url` = ?, `shop_name` = ? WHERE (`shop_id` = ?);";
-        int result = jdbcTemplate.update(sql,
-                new Timestamp(System.currentTimeMillis()),
-                addShopDTO.shopAddress(),
-                addShopDTO.shopCapacity(),
-                addShopDTO.shopImageId(),
-                addShopDTO.shopImageUrl(),
-                addShopDTO.shopName(),
-                addShopDTO.owner());
+        int result = jdbcTemplate.update(sql, new Timestamp(System.currentTimeMillis()), addShopDTO.shopAddress(), addShopDTO.shopCapacity(), addShopDTO.shopImageId(), addShopDTO.shopImageUrl(), addShopDTO.shopName(), addShopDTO.shopId());
         return result > 0;
     }
 
     public List<ShopDetails> getAllShop() {
         String sql = "SELECT * FROM Dustman.shop_details";
-
-        List<ShopDetails> shopDetails = jdbcTemplate.query(sql, new ShopRowMapper());
-        return shopDetails;
+        return jdbcTemplate.query(sql, new ShopRowMapper());
     }
 
-    public String changeOnlineStatus(String id) {
+    public boolean changeOnlineStatus(String id) {
         String sql = "UPDATE `Dustman`.`shop_details` SET `online` = NOT `online` WHERE `shop_id` = ?";
         int result = jdbcTemplate.update(sql, id);
-        return result > 0 ? "Status changed successfully" : "Failed to change status";
+        return result > 0 ;
 
     }
 
-    public String changeActivateStatus(String id) {
+    public Boolean changeActivateStatus(String id) {
         String sql = "UPDATE `Dustman`.`shop_details` SET `activate` = NOT `activate` WHERE `shop_id` = ?";
         int result = jdbcTemplate.update(sql, id);
-        return result > 0 ? "Status changed successfully" : "Failed to change status";
+        return result > 0 ;
 
     }
 
@@ -86,11 +68,15 @@ public class ShopDAO {
         return shopDetails;
     }
 
-    public String deleteShop(String id) {
-        userDAO.updateRole(new UpdateRole(id, Role.USER));
+    @Transactional
+    public Boolean deleteShop(String id) {
+
+        String UserIDSQL = "SELECT `user_id` FROM `Dustman`.`shop_details` WHERE `shop_id`= ?";
+        String userId = jdbcTemplate.queryForObject(UserIDSQL, String.class, id);
+        userDAO.updateRole(new UserDTO(userId, Role.USER));
         String sql = "DELETE FROM `Dustman`.`shop_details` WHERE `shop_id` = ?";
         int result = jdbcTemplate.update(sql, id);
-        return result > 0 ? "Shop deleted successfully" : "Failed to delete shop";
+        return result > 0 ;
     }
 
 }

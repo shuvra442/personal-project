@@ -1,4 +1,4 @@
-package com.dustman.dto.shop;
+package com.dustman.dto;
 
 public record AddShopDTO(
         String shopName,
@@ -6,4 +6,4 @@ public record AddShopDTO(
         String shopCapacity,
         String shopImageUrl,
         String shopImageId,
-        String owner) {}
+        String shopId) {}

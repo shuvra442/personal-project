@@ -1,4 +1,4 @@
-package com.dustman.dto.payment;
+package com.dustman.dto;
 
 import com.dustman.utils.PaymentStatus;
 

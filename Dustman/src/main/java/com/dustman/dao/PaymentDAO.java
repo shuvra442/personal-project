@@ -1,6 +1,6 @@
 package com.dustman.dao;
 
-import com.dustman.dto.payment.PaymentInfo;
+import com.dustman.dto.PaymentInfo;
 import com.dustman.model.PaymentDetails;
 import com.dustman.utils.rowmapper.PaymentRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

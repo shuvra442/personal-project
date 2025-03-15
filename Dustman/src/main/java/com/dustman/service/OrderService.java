@@ -1,7 +1,8 @@
 package com.dustman.service;
 
 import com.dustman.dao.OrderDAO;
-import com.dustman.dto.order.OrderDTO;
+import com.dustman.dto.OrderDTO;
+import com.dustman.dto.Status;
 import com.dustman.model.OrderDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,36 +17,49 @@ public class OrderService {
         this.orderDAO = orderDAO;
     }
 
-    public String addOrder(OrderDTO orderDTO) {
+    public Status addOrder(OrderDTO orderDTO) {
         if (orderDAO.addOrder(orderDTO)) {
-            return "Order added successfully";
+            return new Status(200, "Order added successfully");
         } else {
-            return "Failed to add order";
+            return new Status(500);
         }
     }
 
-    public String cancelOrder(String id) {
+    public Status cancelOrder(String id) {
         if (orderDAO.cancelOrder(id)) {
-            return "Order cancelled successfully";
+            return new Status(200, "Order cancelled successfully");
         }
-        return "Something wrong \nplease try again";
+        return new Status(500);
     }
 
-    public String completeOrder(String id) {
+    public Status completeOrder(String id) {
         if (orderDAO.completeOrder(id)) {
-            return "Order completed successfully";
+            return new Status(200, "Order completed successfully");
         }
-        return "Something wrong \nplease try again";
+        return new Status(500);
     }
 
-    public List<OrderDetails> showAllOrder(){
-        return orderDAO.showAllOrder();
+    public Status showAllOrder() {
+        List<OrderDetails> orderDetailsList = orderDAO.showAllOrder();
+        if (!orderDetailsList.isEmpty()) {
+            return new Status(200, orderDetailsList);
+        }
+        return new Status(204);
     }
 
-    public List<OrderDetails> showUserOrder(String id){
-        return  orderDAO.showUserOrder(id);
+    public Status showUserOrder(String id) {
+        List<OrderDetails> orderDetailsList = orderDAO.showUserOrder(id);
+        if (!orderDetailsList.isEmpty()) {
+            return new Status(200, orderDetailsList);
+        }
+        return new Status(204);
     }
-    public OrderDetails checkOrder(String id){
-        return  orderDAO.checkOrder(id);
+
+    public Status checkOrder(String id) {
+        OrderDetails orderDetails= orderDAO.checkOrder(id);
+        if (orderDetails != null) {
+            return new Status(200, orderDetails);
+        }
+        return new Status(204);
     }
 }

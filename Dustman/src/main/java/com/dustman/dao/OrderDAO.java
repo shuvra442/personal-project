@@ -1,6 +1,6 @@
 package com.dustman.dao;
 
-import com.dustman.dto.order.OrderDTO;
+import com.dustman.dto.OrderDTO;
 import com.dustman.model.OrderDetails;
 import com.dustman.utils.OrderStatus;
 import com.dustman.utils.rowmapper.OrderRowMapper;
@@ -20,7 +20,7 @@ public class OrderDAO {
 
     public boolean addOrder(OrderDTO orderDTO) {
         String sql = "INSERT INTO `Dustman`.`order_details` (`status`, `garbage_quantity`, `order_from_user_id`, `order_id`, `order_to_user_id`) VALUES (?,?,?,?,?)";
-        int result = jdbcTemplate.update(sql, orderDTO.getStatus().toString(), orderDTO.getGarbageQuantity(), orderDTO.getOrderFrom(), UUID.randomUUID().toString(), orderDTO.getOrderTo());
+        int result = jdbcTemplate.update(sql, orderDTO.status().toString(), orderDTO.garbageQuantity(), orderDTO.orderFrom(), UUID.randomUUID().toString(), orderDTO.orderTo());
         return result > 0;
     }
 
@@ -38,8 +38,7 @@ public class OrderDAO {
 
     public List<OrderDetails> showAllOrder() {
         String sql = "SELECT * FROM Dustman.order_details";
-        List<OrderDetails> orderDetails = jdbcTemplate.query(sql, new OrderRowMapper());
-        return orderDetails;
+        return jdbcTemplate.query(sql, new OrderRowMapper());
     }
 
     public List<OrderDetails> showUserOrder(String id) {
@@ -55,8 +54,7 @@ public class OrderDAO {
 
     public OrderDetails checkOrder(String id) {
         String sql1 = "SELECT * FROM Dustman.order_details WHERE order_id = ?";
-        OrderDetails orderDetails = jdbcTemplate.queryForObject(sql1, new OrderRowMapper(), id);
-        return orderDetails;
+        return jdbcTemplate.queryForObject(sql1, new OrderRowMapper(), id);
     }
 
 

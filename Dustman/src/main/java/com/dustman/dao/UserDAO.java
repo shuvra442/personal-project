@@ -1,9 +1,6 @@
 package com.dustman.dao;
 
-import com.dustman.dto.user.RegisterInfo;
-import com.dustman.dto.user.UpdateRole;
-import com.dustman.dto.user.UpdatedUserInfo;
-import com.dustman.model.OrderDetails;
+import com.dustman.dto.UserDTO;
 import com.dustman.model.UserDetails;
 import com.dustman.utils.Role;
 import com.dustman.utils.rowmapper.UserRowMapper;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -25,7 +23,7 @@ public class UserDAO {
     }
 
 
-    public String registerUser(RegisterInfo registerInfo) {
+    public String registerUser(UserDTO registerInfo) {
         if (checkEmail(registerInfo.getEmail())) {
             return "exist";
         }
@@ -35,7 +33,7 @@ public class UserDAO {
 
     }
 
-    public boolean updateUser(UpdatedUserInfo updatedUserInfo) {
+    public boolean updateUser(UserDTO updatedUserInfo) {
         String sql = "UPDATE `Dustman`.`user_details` SET `user_name` = ?, `image_url` = ?, `image_id` = ?, `user_roc` = ?,`updated_at` = ? WHERE `user_id` = ?";
         int status = jdbcTemplate.update(sql, updatedUserInfo.getUsername(), updatedUserInfo.getImage(), updatedUserInfo.getImageId(), updatedUserInfo.getUserRoc(), new Timestamp(System.currentTimeMillis()), updatedUserInfo.getUserId());
         return status > 0;
@@ -75,10 +73,10 @@ public class UserDAO {
     public boolean checkPassword(String userId, String password) {
         String retrievePassword = "SELECT password FROM `Dustman`.`user_details` WHERE `user_id` = ?";
         String oldPassword = jdbcTemplate.queryForObject(retrievePassword, String.class, userId);
-        return oldPassword.equals(password);
+        return Objects.equals(oldPassword, password);
     }
 
-    public boolean updateRole(UpdateRole updateRole) {
+    public boolean updateRole(UserDTO updateRole) {
         try {
             int status;
             String sql = "UPDATE `Dustman`.`user_details` SET `role` = ?,`updated_at` = ? WHERE `user_id` = ?";
@@ -91,10 +89,31 @@ public class UserDAO {
 
     }
 
-    public boolean deleteUser(String id){
+    public boolean deleteUser(String id) {
+        String firstSQL = "SELECT `role` FROM `Dustman`.`user_details` WHERE `user_id`= ?";
+        String role = jdbcTemplate.queryForObject(firstSQL, String.class, id);
+        if (Objects.equals(role, "SHOPKEEPER")) {
+            String nullifyOrdersSql = "UPDATE Dustman.order_details SET  order_to_user_id = NULL WHERE order_to_user_id = ?";
+            jdbcTemplate.update(nullifyOrdersSql, id);
+
+        } else if (Objects.equals(role, "USER")) {
+            String nullifyOrdersSql = "UPDATE Dustman.order_details SET order_from_user_id = NULL WHERE order_from_user_id = ? ";
+            jdbcTemplate.update(nullifyOrdersSql, id);
+        }
+
         String sql = "DELETE FROM `Dustman`.`user_details` WHERE `user_id` = ?";
         int status = jdbcTemplate.update(sql, id);
         return status > 0;
+    }
+
+    public List<String> retrieveSellerIds(String id) {
+        String sql = "SELECT order_from_user_id FROM order_details WHERE order_to_user_id = ?";
+        return jdbcTemplate.queryForList(sql, String.class, id);
+    }
+
+    public List<String> retrieveBuyerIds(String id) {
+        String sql = "SELECT order_to_user_id FROM order_details WHERE order_from_user_id = ?";
+        return jdbcTemplate.queryForList(sql, String.class, id);
     }
 
 
