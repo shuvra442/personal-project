@@ -1,3 +1,6 @@
 .idea
+
 /Dustman/target/
 /target/
+/Dustman/.idea/
+/Dustman/src/main/resources/application.properties

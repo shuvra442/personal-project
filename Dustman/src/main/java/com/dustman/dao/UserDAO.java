@@ -106,6 +106,11 @@ public class UserDAO {
         return status > 0;
     }
 
+    public String getEmailID(String id) {
+        String sql = "SELECT email FROM user_details WHERE user_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
     public List<String> retrieveSellerIds(String id) {
         String sql = "SELECT order_from_user_id FROM order_details WHERE order_to_user_id = ?";
         return jdbcTemplate.queryForList(sql, String.class, id);
@@ -116,5 +121,8 @@ public class UserDAO {
         return jdbcTemplate.queryForList(sql, String.class, id);
     }
 
-
+    public String getUserName(String id) {
+        String sql="SELECT user_name FROM user_details WHERE user_id = ?";
+        return jdbcTemplate.queryForObject(sql,String.class,id);
+    }
 }

@@ -57,5 +57,9 @@ public class OrderDAO {
         return jdbcTemplate.queryForObject(sql1, new OrderRowMapper(), id);
     }
 
+    public String fromUserEmailUsingOrderID(String id) {
+        String sql = "SELECT u.email FROM order_details o JOIN user_details u ON o.order_from_user_id = u.user_id WHERE o.order_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
 
 }

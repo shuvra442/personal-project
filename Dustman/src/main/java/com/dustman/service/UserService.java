@@ -12,16 +12,20 @@ import java.util.List;
 public class UserService {
 
     private final UserDAO userDAO;
+    private final EmailService emailService;
 
-    public UserService(UserDAO userDAO) {
+    public UserService(UserDAO userDAO, EmailService emailService) {
         this.userDAO = userDAO;
+        this.emailService = emailService;
     }
 
     public Status registerUser(UserDTO registerInfo) {
         String result = userDAO.registerUser(registerInfo);
         if (result.equals("exist")) {
+            emailService.sendEmail(registerInfo.getEmail(), "Register", "Someone tried to register with your email");
             return new Status(409, "User already exist");
         } else if (result.equals("true")) {
+            emailService.sendEmail(registerInfo.getEmail(), "Register", "Registered successfully");
             return new Status(201, "User successfully registered");
         } else {
             return new Status(500, "Internal server error");
@@ -70,11 +74,16 @@ public class UserService {
 
     public Status updatePassword(UserDTO updatePasswordInfo) {
         if (userDAO.checkUser(updatePasswordInfo.getUserId())) {
+            String email = userDAO.getEmailID(updatePasswordInfo.getUserId());
             if (userDAO.checkPassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getOldPassword())) {
-                userDAO.updatePassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getNewPassword());
-                return new Status(200,"Password Update Successfully");
+                if (userDAO.updatePassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getNewPassword())) {
+                    emailService.sendEmail(email,"Password Update","Your password has been updated successfully");
+                    return new Status(200, "Password Update Successfully");
+                }
+                return new Status(500);
             } else {
-                return new Status(400,"Old Password is incorrect");
+                emailService.sendEmail(email,"Password Update","Someone tried to update your password");
+                return new Status(400, "Old Password is incorrect");
             }
         }
         return new Status(404, "Data not found for this user ID");
@@ -97,14 +106,16 @@ public class UserService {
     }
 
     public Status deleteUser(String id) {
-        if (userDAO.checkUser(id)){
+        if (userDAO.checkUser(id)) {
+            String email = userDAO.getEmailID(id);
             if (userDAO.deleteUser(id)) {
-                return new Status(200,"User deleted successfully");
+                emailService.sendEmail(email, "Account Deletion", "Your account has been deleted successfully");
+                return new Status(200, "User deleted successfully");
             } else {
                 return new Status(500);
             }
         }
-        return new Status(404,"Data not found for this user ID");
+        return new Status(404, "Data not found for this user ID");
     }
 
 }

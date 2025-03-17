@@ -16,7 +16,7 @@ public class ShopController {
     private final OrderService orderService;
 
 
-    public ShopController(ShopService shopService,OrderService orderService) {
+    public ShopController(ShopService shopService, OrderService orderService) {
         this.shopService = shopService;
         this.orderService = orderService;
     }
@@ -44,7 +44,7 @@ public class ShopController {
 
     @PatchMapping("/completeorder")
     public ResponseEntity<Object> completeOrder(@RequestPart("id") String id) {
-        Status status=orderService.completeOrder(id);
+        Status status = orderService.completeOrder(id);
         return ResponseEntity.status(status.code()).body(status.data());
     }
 

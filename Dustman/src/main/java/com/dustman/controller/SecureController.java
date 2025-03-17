@@ -2,18 +2,10 @@ package com.dustman.controller;
 
 
 import com.dustman.dto.*;
-import com.dustman.model.OrderDetails;
-import com.dustman.model.PaymentDetails;
-import com.dustman.model.ShopDetails;
-import com.dustman.service.OrderService;
-import com.dustman.service.PaymentService;
-import com.dustman.service.ShopService;
-import com.dustman.service.UserService;
+import com.dustman.service.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/secure")
@@ -109,8 +101,8 @@ public class SecureController {
     }
 
     @PatchMapping("/cancelorder")
-    public ResponseEntity<Object> cancelOrder(@RequestPart("id") String id) {
-        Status status = orderService.cancelOrder(id);
+    public ResponseEntity<Object> cancelOrder(@RequestPart("orderID") String orderID,@RequestPart("userID") String userID) {
+        Status status = orderService.cancelOrder(orderID,userID);
         return ResponseEntity.status(status.code()).body(status.data());
     }
 

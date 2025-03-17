@@ -71,12 +71,19 @@ public class ShopDAO {
     @Transactional
     public Boolean deleteShop(String id) {
 
-        String UserIDSQL = "SELECT `user_id` FROM `Dustman`.`shop_details` WHERE `shop_id`= ?";
-        String userId = jdbcTemplate.queryForObject(UserIDSQL, String.class, id);
+
+        String userIDSQL = "SELECT `user_id` FROM `Dustman`.`shop_details` WHERE `shop_id`= ?";
+        String userId = jdbcTemplate.queryForObject(userIDSQL, String.class, id);
         userDAO.updateRole(new UserDTO(userId, Role.USER));
         String sql = "DELETE FROM `Dustman`.`shop_details` WHERE `shop_id` = ?";
         int result = jdbcTemplate.update(sql, id);
         return result > 0 ;
     }
+
+    public String getEmailID(String id){
+        String sql="SELECT u.email FROM shop_details s JOIN user_details u ON s.user_id = u.user_id WHERE s.shop_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class,id);
+    }
+
 
 }

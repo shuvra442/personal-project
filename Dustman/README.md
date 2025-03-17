@@ -2,29 +2,16 @@
 
 **Personal project**
 
-## Timestamp Format
 
-"2025-02-05T13:27:42.903+00:00"
 
-### Sample data for `/payment` endpoint 
-```json
+```JSON
 {
-  "paymentId": "17c6f6ca-8845-4647-91bd-f1e049377428",
-  "status": true,
-  "amount": 45860,
-  "createTime": "2025-02-05T13:27:42.903+00:00",
-  "user": "deb65cda-8479-4769-998c-a3077c011982"
-} 
-```
-### Sample data for `/register` endpoint 
-```json
-{
-  "username": "sourav das",
-  "password": "Shuiuhfdg&%^45",
-  "email": "sourav@das.com",
-  "image": "http://fdgfdg.fds/dsfgfsdg.png",
-  "imageId": "dsfgfsdg",
-  "role": "user",
-  "userRoc": "fgfgfg"
+  "EmailPassword": "6V9zVPc6eq7iV8",
+  "EmailID": "souravdas23@zohomail.in"
 }
-````
+```
+
+### Collection of all endpoints 
+```properties
+https://sour99.postman.co/workspace/OAuth2~f5ad015a-92cd-4af4-860f-74ab0802bce5/collection/39700540-bea95e84-7110-49c9-96f8-f75c80cc85e6?action=share&creator=39700540
+```

@@ -1,6 +1,8 @@
 package com.dustman.service;
 
 import com.dustman.dao.OrderDAO;
+import com.dustman.dao.ShopDAO;
+import com.dustman.dao.UserDAO;
 import com.dustman.dto.OrderDTO;
 import com.dustman.dto.Status;
 import com.dustman.model.OrderDetails;
@@ -12,21 +14,34 @@ import java.util.List;
 public class OrderService {
 
     private final OrderDAO orderDAO;
+    private final EmailService emailService;
+    private final UserDAO userDAO;
+    private final ShopDAO shopDAO;
 
-    public OrderService(OrderDAO orderDAO) {
+    public OrderService(OrderDAO orderDAO, EmailService emailService, UserDAO userDAO, ShopDAO shopDAO) {
         this.orderDAO = orderDAO;
+        this.emailService = emailService;
+        this.userDAO = userDAO;
+        this.shopDAO = shopDAO;
     }
 
     public Status addOrder(OrderDTO orderDTO) {
         if (orderDAO.addOrder(orderDTO)) {
-            return new Status(200, "Order added successfully");
+            String userName = userDAO.getUserName(orderDTO.orderFrom());
+            String shopName = userDAO.getUserName(orderDTO.orderTo());
+            String mailTextTO = userName + " has placed an order";
+            String mailTextFrom = "Your order place to "+shopName ;
+            emailService.sendEmail(userDAO.getEmailID(orderDTO.orderTo()), "Order", mailTextTO);
+            emailService.sendEmail(userDAO.getEmailID(orderDTO.orderFrom()), "Order", mailTextFrom);
+            return new Status(200, mailTextFrom);
         } else {
             return new Status(500);
         }
     }
 
-    public Status cancelOrder(String id) {
-        if (orderDAO.cancelOrder(id)) {
+    public Status cancelOrder(String orderID,String userID) {
+        if (orderDAO.cancelOrder(orderID)) {
+            emailService.sendEmail(userDAO.getEmailID(userID), "Order", "Order has been cancelled");
             return new Status(200, "Order cancelled successfully");
         }
         return new Status(500);
@@ -34,6 +49,8 @@ public class OrderService {
 
     public Status completeOrder(String id) {
         if (orderDAO.completeOrder(id)) {
+            String userEmail = orderDAO.fromUserEmailUsingOrderID(id);
+            emailService.sendEmail(userEmail, "Order", "Order has been completed");
             return new Status(200, "Order completed successfully");
         }
         return new Status(500);
@@ -56,7 +73,7 @@ public class OrderService {
     }
 
     public Status checkOrder(String id) {
-        OrderDetails orderDetails= orderDAO.checkOrder(id);
+        OrderDetails orderDetails = orderDAO.checkOrder(id);
         if (orderDetails != null) {
             return new Status(200, orderDetails);
         }
