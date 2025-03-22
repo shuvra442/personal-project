@@ -33,6 +33,7 @@ public class OrderService {
             String mailTextFrom = "Your order place to "+shopName ;
             emailService.sendEmail(userDAO.getEmailID(orderDTO.orderTo()), "Order", mailTextTO);
             emailService.sendEmail(userDAO.getEmailID(orderDTO.orderFrom()), "Order", mailTextFrom);
+            System.out.println("Hello");
             return new Status(200, mailTextFrom);
         } else {
             return new Status(500);
