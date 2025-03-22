@@ -1,7 +1,9 @@
 package com.dustman.service;
 
 import com.dustman.dao.ShopDAO;
-import com.dustman.dto.shop.AddShopDTO;
+import com.dustman.dao.UserDAO;
+import com.dustman.dto.AddShopDTO;
+import com.dustman.dto.Status;
 import com.dustman.model.ShopDetails;
 import org.springframework.stereotype.Service;
 
@@ -11,46 +13,72 @@ import java.util.List;
 public class ShopService {
 
     private final ShopDAO shopDAO;
+    private final UserDAO userDAO;
+    private final EmailService emailService;
 
-    public ShopService(ShopDAO shopDAO) {
+    public ShopService(ShopDAO shopDAO, EmailService emailService, UserDAO userDAO) {
         this.shopDAO = shopDAO;
+        this.emailService = emailService;
+        this.userDAO = userDAO;
     }
 
 
-    public String addShop(AddShopDTO addShopDTO) {
+    public Status addShop(AddShopDTO addShopDTO) {
         if (shopDAO.addShop(addShopDTO)) {
-            return "Shop added successfully";
+            String email = userDAO.getEmailID(addShopDTO.shopId());
+            emailService.sendEmail(email, "Shop Registration", "Your shop has been registered successfully");
+            return new Status(201, "Shop added successfully");
         } else {
-            return "Failed to add shop";
+            return new Status(500);
         }
     }
 
-    public String updateShop(AddShopDTO addShopDTO) {
+    public Status updateShop(AddShopDTO addShopDTO) {
         if (shopDAO.updateShop(addShopDTO)) {
-            return "Shop added successfully";
-        } else {
-            return "Failed to add shop";
+            return new Status(200, "Shop added successfully");
         }
+        return new Status(500);
+
     }
 
-    public List<ShopDetails> getAllShop() {
-
-        return shopDAO.getAllShop();
+    public Status getAllShop() {
+        List<ShopDetails> shopDetailsList = shopDAO.getAllShop();
+        if (!shopDetailsList.isEmpty()) {
+            return new Status(200, shopDetailsList);
+        }
+        return new Status(204);
     }
 
-    public String changeOnlineStatus(String id) {
-        return shopDAO.changeOnlineStatus(id);
+    public Status changeOnlineStatus(String id) {
+        if (shopDAO.changeOnlineStatus(id)) {
+            return new Status(200, "Status changed successfully");
+        }
+        return new Status(500);
     }
 
-    public String changeActivateStatus(String id) {
-        return shopDAO.changeActivateStatus(id);
+    public Status changeActivateStatus(String id) {
+        if (shopDAO.changeActivateStatus(id)) {
+            emailService.sendEmail(shopDAO.getEmailID(id), "Shop Activation Status", "Your shop's activation status has been  changed");
+            return new Status(200, "Status changed successfully");
+        }
+        return new Status(500);
     }
 
-    public List<ShopDetails> activeAndOnlineShop() {
-        return shopDAO.activeAndOnlineShop();
+    public Status activeAndOnlineShop() {
+        List<ShopDetails> shopDetailsList = shopDAO.activeAndOnlineShop();
+        if (!shopDetailsList.isEmpty()) {
+            return new Status(200, shopDetailsList);
+        }
+        return new Status(204);
     }
 
-    public String deleteShop(String id) {
-        return shopDAO.deleteShop(id);
+    public Status deleteShop(String id) {
+        if (shopDAO.deleteShop(id)) {
+            String userEmail=shopDAO.getEmailID(id);
+            emailService.sendEmail(userEmail, "Shop Deletion", "Your shop has been deleted");
+            return new Status(200, "Shop deleted successfully");
+        }
+        return new Status(500);
+
     }
 }

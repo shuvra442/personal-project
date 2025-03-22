@@ -1,7 +1,8 @@
 package com.dustman.service;
 
 import com.dustman.dao.UserDAO;
-import com.dustman.dto.user.*;
+import com.dustman.dto.Status;
+import com.dustman.dto.UserDTO;
 import com.dustman.model.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -11,55 +12,84 @@ import java.util.List;
 public class UserService {
 
     private final UserDAO userDAO;
+    private final EmailService emailService;
 
-    public UserService(UserDAO userDAO) {
+    public UserService(UserDAO userDAO, EmailService emailService) {
         this.userDAO = userDAO;
+        this.emailService = emailService;
     }
 
-    public String registerUser(RegisterInfo registerInfo) {
+    public Status registerUser(UserDTO registerInfo) {
         String result = userDAO.registerUser(registerInfo);
         if (result.equals("exist")) {
-            return "User already exist";
+            emailService.sendEmail(registerInfo.getEmail(), "Register", "Someone tried to register with your email");
+            return new Status(409, "User already exist");
         } else if (result.equals("true")) {
-            return "User successfully registered";
+            emailService.sendEmail(registerInfo.getEmail(), "Register", "Registered successfully");
+            return new Status(201, "User successfully registered");
         } else {
-            return "Something went wrong! \nPlease try again";
+            return new Status(500, "Internal server error");
         }
     }
 
-    public List<UserDetails> getAllUser() {
-        return userDAO.getAllUser();
-    }
-
-    public UserInfo getUserById(String id) {
-        UserDetails userDetails = userDAO.getUserById(id);
-
-        return new UserInfo(userDetails.getUserId(), userDetails.getUserName(), "Hide it for Security purpose", userDetails.getEmail(), userDetails.getImageUrl(), userDetails.getImageId(), userDetails.getRole(), userDetails.getUserRoc(), userDetails.getCreatedAt(), userDetails.getUpdatedAt());
-    }
-
-    public boolean checkUser(String id) {
-        return userDAO.checkUser(id);
-
-    }
-
-    public String updateUser(UpdatedUserInfo updatedUserInfo) {
-        boolean status = userDAO.updateUser(updatedUserInfo);
-        return (status) ? "User successfully updated" : "Something went wrong! \nPlease try again";
-    }
-
-    public String updatePassword(UpdatePasswordInfo updatePasswordInfo) {
-        if (!userDAO.checkUser(updatePasswordInfo.getUserId())) {
-            return "User not found";
+    public Status getAllUser() {
+        List<UserDetails> userDetails = userDAO.getAllUser();
+        if (!userDetails.isEmpty()) {
+            return new Status(200, userDetails);
         }
-        if (userDAO.checkPassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getOldPassword())) {
-            userDAO.updatePassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getNewPassword());
-            return "Password updated";
+        return new Status(204, "No user found");
+    }
+
+    //todo add Status
+    public Status getUserById(String id) {
+        boolean isExist = userDAO.checkUser(id);
+        if (isExist) {
+            UserDetails userDetails = userDAO.getUserById(id);
+            return new Status(200, userDetails);
+        }
+        return new Status(404, "use not found with this ID");
+    }
+
+    public Status checkUser(String id) {
+        boolean state = userDAO.checkUser(id);
+        if (state) {
+            return new Status(200, "User found");
         } else {
-            return "Old password is incorrect";
+            return new Status(404, "Data not found");
         }
     }
 
-    public String updateRole(UpdateRole updateRole) {
+    public Status updateUser(UserDTO updatedUserInfo) {
+        boolean isExist = userDAO.checkUser(updatedUserInfo.getUserId());
+        if (isExist) {
+            boolean status = userDAO.updateUser(updatedUserInfo);
+            if (status) {
+                return new Status(200, "User successfully updated");
+            }
+            return new Status(500);
+        }
+//
+        return new Status(404, "Data not found for this user ID");
+    }
+
+    public Status updatePassword(UserDTO updatePasswordInfo) {
+        if (userDAO.checkUser(updatePasswordInfo.getUserId())) {
+            String email = userDAO.getEmailID(updatePasswordInfo.getUserId());
+            if (userDAO.checkPassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getOldPassword())) {
+                if (userDAO.updatePassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getNewPassword())) {
+                    emailService.sendEmail(email,"Password Update","Your password has been updated successfully");
+                    return new Status(200, "Password Update Successfully");
+                }
+                return new Status(500);
+            } else {
+                emailService.sendEmail(email,"Password Update","Someone tried to update your password");
+                return new Status(400, "Old Password is incorrect");
+            }
+        }
+        return new Status(404, "Data not found for this user ID");
+    }
+
+    public String updateRole(UserDTO updateRole) {
         try {
             if (!userDAO.checkUser(updateRole.getUserId())) {
                 return "User not found";
@@ -75,12 +105,17 @@ public class UserService {
         }
     }
 
-    public String deleteUser(String id) {
-        if (userDAO.deleteUser(id)) {
-            return "User deleted successfully";
-        } else {
-            return "User not found";
+    public Status deleteUser(String id) {
+        if (userDAO.checkUser(id)) {
+            String email = userDAO.getEmailID(id);
+            if (userDAO.deleteUser(id)) {
+                emailService.sendEmail(email, "Account Deletion", "Your account has been deleted successfully");
+                return new Status(200, "User deleted successfully");
+            } else {
+                return new Status(500);
+            }
         }
+        return new Status(404, "Data not found for this user ID");
     }
 
 }

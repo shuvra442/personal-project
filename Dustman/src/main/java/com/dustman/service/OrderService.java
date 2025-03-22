@@ -1,7 +1,10 @@
 package com.dustman.service;
 
 import com.dustman.dao.OrderDAO;
-import com.dustman.dto.order.OrderDTO;
+import com.dustman.dao.ShopDAO;
+import com.dustman.dao.UserDAO;
+import com.dustman.dto.OrderDTO;
+import com.dustman.dto.Status;
 import com.dustman.model.OrderDetails;
 import org.springframework.stereotype.Service;
 
@@ -11,41 +14,70 @@ import java.util.List;
 public class OrderService {
 
     private final OrderDAO orderDAO;
+    private final EmailService emailService;
+    private final UserDAO userDAO;
+    private final ShopDAO shopDAO;
 
-    public OrderService(OrderDAO orderDAO) {
+    public OrderService(OrderDAO orderDAO, EmailService emailService, UserDAO userDAO, ShopDAO shopDAO) {
         this.orderDAO = orderDAO;
+        this.emailService = emailService;
+        this.userDAO = userDAO;
+        this.shopDAO = shopDAO;
     }
 
-    public String addOrder(OrderDTO orderDTO) {
+    public Status addOrder(OrderDTO orderDTO) {
         if (orderDAO.addOrder(orderDTO)) {
-            return "Order added successfully";
+            String userName = userDAO.getUserName(orderDTO.orderFrom());
+            String shopName = userDAO.getUserName(orderDTO.orderTo());
+            String mailTextTO = userName + " has placed an order";
+            String mailTextFrom = "Your order place to "+shopName ;
+            emailService.sendEmail(userDAO.getEmailID(orderDTO.orderTo()), "Order", mailTextTO);
+            emailService.sendEmail(userDAO.getEmailID(orderDTO.orderFrom()), "Order", mailTextFrom);
+            System.out.println("Hello");
+            return new Status(200, mailTextFrom);
         } else {
-            return "Failed to add order";
+            return new Status(500);
         }
     }
 
-    public String cancelOrder(String id) {
-        if (orderDAO.cancelOrder(id)) {
-            return "Order cancelled successfully";
+    public Status cancelOrder(String orderID,String userID) {
+        if (orderDAO.cancelOrder(orderID)) {
+            emailService.sendEmail(userDAO.getEmailID(userID), "Order", "Order has been cancelled");
+            return new Status(200, "Order cancelled successfully");
         }
-        return "Something wrong \nplease try again";
+        return new Status(500);
     }
 
-    public String completeOrder(String id) {
+    public Status completeOrder(String id) {
         if (orderDAO.completeOrder(id)) {
-            return "Order completed successfully";
+            String userEmail = orderDAO.fromUserEmailUsingOrderID(id);
+            emailService.sendEmail(userEmail, "Order", "Order has been completed");
+            return new Status(200, "Order completed successfully");
         }
-        return "Something wrong \nplease try again";
+        return new Status(500);
     }
 
-    public List<OrderDetails> showAllOrder(){
-        return orderDAO.showAllOrder();
+    public Status showAllOrder() {
+        List<OrderDetails> orderDetailsList = orderDAO.showAllOrder();
+        if (!orderDetailsList.isEmpty()) {
+            return new Status(200, orderDetailsList);
+        }
+        return new Status(204);
     }
 
-    public List<OrderDetails> showUserOrder(String id){
-        return  orderDAO.showUserOrder(id);
+    public Status showUserOrder(String id) {
+        List<OrderDetails> orderDetailsList = orderDAO.showUserOrder(id);
+        if (!orderDetailsList.isEmpty()) {
+            return new Status(200, orderDetailsList);
+        }
+        return new Status(204);
     }
-    public OrderDetails checkOrder(String id){
-        return  orderDAO.checkOrder(id);
+
+    public Status checkOrder(String id) {
+        OrderDetails orderDetails = orderDAO.checkOrder(id);
+        if (orderDetails != null) {
+            return new Status(200, orderDetails);
+        }
+        return new Status(204);
     }
 }

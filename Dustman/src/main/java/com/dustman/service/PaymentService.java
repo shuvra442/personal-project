@@ -1,7 +1,9 @@
 package com.dustman.service;
 
 import com.dustman.dao.PaymentDAO;
-import com.dustman.dto.payment.PaymentInfo;
+import com.dustman.dao.UserDAO;
+import com.dustman.dto.PaymentInfo;
+import com.dustman.dto.Status;
 import com.dustman.model.PaymentDetails;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +13,34 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentDAO paymentDAO;
+    private final UserDAO userDAO;
 
-    public PaymentService(PaymentDAO paymentDAO) {
+    public PaymentService(PaymentDAO paymentDAO, UserDAO userDAO) {
         this.paymentDAO = paymentDAO;
+        this.userDAO = userDAO;
     }
 
-    public String makePayment(PaymentInfo paymentInfo) {
-        boolean status=paymentDAO.makePayment(paymentInfo);
-        return status?"success":"fail";
+    public Status makePayment(PaymentInfo paymentInfo) {
+        boolean status = paymentDAO.makePayment(paymentInfo);
+        return status ? new Status(200) : new Status(500);
     }
 
-    public List<PaymentDetails> getAllUserPaymentInfo() {
-        return paymentDAO.getAllPaymentInfo();
+    public Status getAllUserPaymentInfo() {
+        List<PaymentDetails> paymentDetailsList = paymentDAO.getAllPaymentInfo();
+        if (!paymentDetailsList.isEmpty()) {
+            return new Status(200, paymentDetailsList);
+        }
+        return new Status(204);
     }
 
-    public  List<PaymentDetails> getPaymentInfoByUserId(String userId){
-        return paymentDAO.getPaymentInfoByUserId(userId);
+    public Status getPaymentInfoByUserId(String userId) {
+        if (userDAO.checkUser(userId)) {
+            List<PaymentDetails> paymentDetailsList = paymentDAO.getPaymentInfoByUserId(userId);
+            if (paymentDetailsList.isEmpty()){
+                return new Status(204);
+            }
+            return new Status(200,paymentDetailsList);
+        }
+        return new Status(400,"Invalid User ID");
     }
 }
