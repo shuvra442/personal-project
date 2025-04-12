@@ -15,6 +15,7 @@ public record Status(Integer code, Object data) {
             case 400 -> "Bad Request";
             case 404 -> "Data Not Found";
             case 500 -> "Internal Server Error";
+            case 401 -> "Authentication Error";
             default -> "Unknown Status";
         };
     }

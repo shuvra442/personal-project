@@ -1,5 +1,6 @@
-package com.dustman.utils;
+package com.dustman.configuration;
 
+import com.dustman.utils.GlobalDataStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -9,10 +10,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-public class Config {
+public class MailConfiguration {
     private final GlobalDataStore globalDataStore;
 
-    public Config(GlobalDataStore globalDataStore) {
+    public MailConfiguration(GlobalDataStore globalDataStore) {
         this.globalDataStore = globalDataStore;
     }
 

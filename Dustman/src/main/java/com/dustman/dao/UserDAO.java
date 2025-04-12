@@ -125,4 +125,9 @@ public class UserDAO {
         String sql="SELECT user_name FROM user_details WHERE user_id = ?";
         return jdbcTemplate.queryForObject(sql,String.class,id);
     }
+
+    public UserDetails getUserByEmail(String email){
+        String sql="SELECT * FROM user_details WHERE email= ?";
+        return  jdbcTemplate.queryForObject(sql,new UserRowMapper(),email);
+    }
 }

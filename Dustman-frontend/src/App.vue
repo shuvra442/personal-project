@@ -1,22 +1,23 @@
 <template>
-  <h3>Hello</h3>
+  <h3 class="text-red-700">Hello</h3>
  
   <h3>{{ sampleStore }}</h3>
-  <HomeView/>
+  <!-- <HomeView/> -->
  </template>
 
 
 <script lang="ts">
 import { useSampleStore } from './stores/sample';
 import HomeView from './views/HomeView.vue';
+
 import { defineComponent, onMounted, reactive,toRefs } from 'vue';
 
 
 export default defineComponent({
   name: 'App',
-  components: {
-    HomeView
-  },
+  // components: {
+  //   // HomeView
+  // },
   setup() {
     const sampleStore = useSampleStore()
     const state = reactive({})

@@ -23,6 +23,7 @@ public class ShopController {
 
     @PatchMapping("/changeonlinestatus")
     public ResponseEntity<Object> changeOnlineStatus(@RequestPart("id") String id) {
+        System.out.println("Enter");
         Status status = shopService.changeOnlineStatus(id);
         return ResponseEntity.status(status.code()).body(status.data());
     }

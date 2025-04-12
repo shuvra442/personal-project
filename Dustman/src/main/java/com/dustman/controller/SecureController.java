@@ -24,20 +24,23 @@ public class SecureController {
     }
 
     @GetMapping("/showuserbyid")
-    public ResponseEntity<Object> showUserById(@RequestPart("id") String id) {
-        Status status = userService.getUserById(id);
+    public ResponseEntity<Object> showUserById(@RequestPart("id") String id, @RequestHeader("Authorization") String jwt) {
+        String jwtToken=jwt.substring(7);
+        Status status = userService.getUserById(id,jwtToken);
         return ResponseEntity.status(status.code()).body(status.data());
     }
 
     @PutMapping("/updateuser")
-    public ResponseEntity<Object> updateUser(@RequestBody UserDTO updatedUserInfo) {
-        Status status = userService.updateUser(updatedUserInfo);
+    public ResponseEntity<Object> updateUser(@RequestBody UserDTO updatedUserInfo, @RequestHeader("Authorization") String jwt) {
+        String jwtToken=jwt.substring(7);
+        Status status = userService.updateUser(updatedUserInfo,jwtToken);
         return ResponseEntity.status(status.code()).body(status.data());
     }
 
     @PatchMapping("/updatepassword")
-    public ResponseEntity<Object> updatePassword(@RequestBody UserDTO updatePasswordInfo) {
-        Status status = userService.updatePassword(updatePasswordInfo);
+    public ResponseEntity<Object> updatePassword(@RequestBody UserDTO updatePasswordInfo, @RequestHeader("Authorization") String jwt) {
+        String jwtToken=jwt.substring(7);
+        Status status = userService.updatePassword(updatePasswordInfo,jwtToken);
         return ResponseEntity.status(status.code()).body(status.data());
     }
 
@@ -47,8 +50,9 @@ public class SecureController {
 //    }
 
     @DeleteMapping("/deleteuser")
-    public ResponseEntity<Object> deleteUser(@RequestPart("id") String id) {
-        Status status = userService.deleteUser(id);
+    public ResponseEntity<Object> deleteUser(@RequestPart("id") String id, @RequestHeader("Authorization") String jwt) {
+        String jwtToken=jwt.substring(7);
+        Status status = userService.deleteUser(id,jwtToken);
         return ResponseEntity.status(status.code()).body(status.data());
     }
     //user
