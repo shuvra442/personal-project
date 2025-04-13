@@ -148,5 +148,21 @@ public class UserDTO {
         this.updatedAt = updatedAt;
     }
 
-
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", userId='" + userId + '\'' +
+                ", image='" + image + '\'' +
+                ", imageId='" + imageId + '\'' +
+                ", userRoc='" + userRoc + '\'' +
+                ", oldPassword='" + oldPassword + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

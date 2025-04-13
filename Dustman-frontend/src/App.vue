@@ -1,32 +1,42 @@
 <template>
-  <h3>Hello</h3>
- 
-  <h3>{{ sampleStore }}</h3>
-  <HomeView/>
+
+  <template v-if="routeName != 'landingPage'">
+    <!-- <nav class="sticky top-0 z-50 scroll-smooth">
+      <Navbar />
+    </nav> -->
+    <h1>Hello</h1>
+  </template>
+
+  <div class="min-h-screen relative scroll-smooth">
+    <router-view :key="route?.fullPath"></router-view>
+  </div>
  </template>
 
 
 <script lang="ts">
 import { useSampleStore } from './stores/sample';
-import HomeView from './views/HomeView.vue';
-import { defineComponent, onMounted, reactive,toRefs } from 'vue';
+import { useRoute } from 'vue-router'
+import { defineComponent, onMounted, reactive,toRefs, computed } from 'vue';
 
 
 export default defineComponent({
   name: 'App',
-  components: {
-    HomeView
-  },
   setup() {
+    const route = useRoute()
     const sampleStore = useSampleStore()
-    const state = reactive({})
+    const state = reactive({
+      routeName: computed(() => {
+        return route?.name
+      })
+    })
     
     onMounted(()=>{
       sampleStore.fetchSampleData()
     })
     return {
       ...toRefs(state),
-      sampleStore
+      sampleStore,
+      route
     }
   }
 
@@ -36,5 +46,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
 
 </style>

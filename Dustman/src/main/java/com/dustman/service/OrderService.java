@@ -40,6 +40,7 @@ public class OrderService {
         }
     }
 
+    // todo:only user and shop keeper can cancel Order
     public Status cancelOrder(String orderID,String userID) {
         if (orderDAO.cancelOrder(orderID)) {
             emailService.sendEmail(userDAO.getEmailID(userID), "Order", "Order has been cancelled");
@@ -47,7 +48,7 @@ public class OrderService {
         }
         return new Status(500);
     }
-
+    // todo:only  shop keeper can complete Order status
     public Status completeOrder(String id) {
         if (orderDAO.completeOrder(id)) {
             String userEmail = orderDAO.fromUserEmailUsingOrderID(id);
@@ -57,6 +58,7 @@ public class OrderService {
         return new Status(500);
     }
 
+    //todo: admin can see all order
     public Status showAllOrder() {
         List<OrderDetails> orderDetailsList = orderDAO.showAllOrder();
         if (!orderDetailsList.isEmpty()) {
@@ -65,6 +67,7 @@ public class OrderService {
         return new Status(204);
     }
 
+    //todo: only user can see there order
     public Status showUserOrder(String id) {
         List<OrderDetails> orderDetailsList = orderDAO.showUserOrder(id);
         if (!orderDetailsList.isEmpty()) {

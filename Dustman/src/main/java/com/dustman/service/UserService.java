@@ -4,6 +4,7 @@ import com.dustman.dao.UserDAO;
 import com.dustman.dto.Status;
 import com.dustman.dto.UserDTO;
 import com.dustman.model.UserDetails;
+import com.dustman.utils.JwtUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +14,12 @@ public class UserService {
 
     private final UserDAO userDAO;
     private final EmailService emailService;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserDAO userDAO, EmailService emailService) {
+    public UserService(UserDAO userDAO, EmailService emailService, JwtUtil jwtUtil) {
         this.userDAO = userDAO;
         this.emailService = emailService;
+        this.jwtUtil = jwtUtil;
     }
 
     public Status registerUser(UserDTO registerInfo) {
@@ -41,11 +44,15 @@ public class UserService {
     }
 
     //todo add Status
-    public Status getUserById(String id) {
+    public Status getUserById(String id, String jwtToken) {
+        String email=jwtUtil.extractUserName(jwtToken);
         boolean isExist = userDAO.checkUser(id);
         if (isExist) {
             UserDetails userDetails = userDAO.getUserById(id);
-            return new Status(200, userDetails);
+            if (email.equals(userDetails.getEmail())){
+                return new Status(200, userDetails);
+            }
+            return new Status(401);
         }
         return new Status(404, "use not found with this ID");
     }
@@ -59,12 +66,19 @@ public class UserService {
         }
     }
 
-    public Status updateUser(UserDTO updatedUserInfo) {
+    public Status updateUser(UserDTO updatedUserInfo, String jwtToken) {
+        String email=jwtUtil.extractUserName(jwtToken);
+
         boolean isExist = userDAO.checkUser(updatedUserInfo.getUserId());
         if (isExist) {
-            boolean status = userDAO.updateUser(updatedUserInfo);
-            if (status) {
-                return new Status(200, "User successfully updated");
+            String dbEmail=userDAO.getEmailID(updatedUserInfo.getUserId());
+            if (email.equals(dbEmail)){
+                boolean status = userDAO.updateUser(updatedUserInfo);
+                if (status) {
+                    return new Status(200, "User successfully updated");
+                }
+            }else {
+                return new Status(401);
             }
             return new Status(500);
         }
@@ -72,9 +86,12 @@ public class UserService {
         return new Status(404, "Data not found for this user ID");
     }
 
-    public Status updatePassword(UserDTO updatePasswordInfo) {
+    public Status updatePassword(UserDTO updatePasswordInfo,String jwtToken) {
         if (userDAO.checkUser(updatePasswordInfo.getUserId())) {
             String email = userDAO.getEmailID(updatePasswordInfo.getUserId());
+            if (!email.equals(jwtUtil.extractUserName(jwtToken))){
+                return new Status(401);
+            }
             if (userDAO.checkPassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getOldPassword())) {
                 if (userDAO.updatePassword(updatePasswordInfo.getUserId(), updatePasswordInfo.getNewPassword())) {
                     emailService.sendEmail(email,"Password Update","Your password has been updated successfully");
@@ -105,9 +122,13 @@ public class UserService {
         }
     }
 
-    public Status deleteUser(String id) {
+    public Status deleteUser(String id,String token) {
+        String email = userDAO.getEmailID(id);
+        if (!email.equals(jwtUtil.extractUserName(token))){
+            return new Status(401);
+        }
         if (userDAO.checkUser(id)) {
-            String email = userDAO.getEmailID(id);
+//            String email = userDAO.getEmailID(id);
             if (userDAO.deleteUser(id)) {
                 emailService.sendEmail(email, "Account Deletion", "Your account has been deleted successfully");
                 return new Status(200, "User deleted successfully");

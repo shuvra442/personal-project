@@ -55,5 +55,4 @@ public class AdminController {
         return ResponseEntity.status(status.code()).body(status.data());
     }
 
-
 }
