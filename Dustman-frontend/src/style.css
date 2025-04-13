@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@layer utilities {
+
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 5px;
+    }
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      width: 3px;
+      height: 2px;
+    }
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b82f6;
+      width: 3px;
+      height: 2px;
+    }
+    ::-webkit-scrollbar-mouse:hover {
+      background: #3b82f6;
+      width: 3px;
+      height: 2px;
+    }
+}
+
+.bg-img {
+    height: 100%;
+    width: 100%;
+    background-image: url('../src/assets/bg-image.jpg');
+}
+
+.nav-title {
+    cursor: pointer;
+    font-weight: 500;
+    border-bottom: 2px solid #000;
+}
+
+.custom-button {
+    cursor: pointer;
+    margin-left: 0.75rem;        /* ml-3 */
+    background-color: #3b82f6;   /* bg-blue-500 */
+    color: white;
+    padding: 0.5rem 1rem;        /* py-2 px-4 */
+    border-radius: 0.375rem;     /* rounded-md */
+    transition: background-color 0.2s ease;
+  }
+  
+  .custom-button:hover {
+    background-color: #2563eb;   /* hover:bg-blue-600 */
+  }
+  
