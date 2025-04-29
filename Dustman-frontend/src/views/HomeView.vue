@@ -1,9 +1,29 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <h1>This is Home template!!!!</h1>
+  <span>Hello</span>
 </template>
+
+<script lang="ts">
+import { reactive, toRefs } from 'vue';
+
+
+export default {
+ 
+  setup() {
+    const state = reactive({
+
+    })
+
+    return {
+      ...toRefs(state)
+      
+    }
+
+   
+  }
+
+}
+
+</script>
 
 <style scoped>
 </style>

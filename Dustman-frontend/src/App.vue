@@ -4,7 +4,7 @@
     <!-- <nav class="sticky top-0 z-50 scroll-smooth">
       <Navbar />
     </nav> -->
-    <h1>Hello</h1>
+    <!-- <h1>Hello</h1> -->
   </template>
 
   <div class="min-h-screen relative scroll-smooth">
