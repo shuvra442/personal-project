@@ -36,10 +36,11 @@ public class SecurityConfiguration {
           http.cors(cors-> cors.configurationSource(corsConfigurationSource()))
                   .csrf(AbstractHttpConfigurer::disable)
                   .authorizeHttpRequests(auth->auth
-                          .requestMatchers("/admin/**").hasRole("ADMIN")
-                          .requestMatchers("/shop/**").hasRole("SHOPKEEPER")
-                          .requestMatchers("/secure/**","/shop/**","/admin/**").authenticated()
-                          .requestMatchers("/api/**").permitAll()
+//                          .anyRequest().permitAll()
+//                          .requestMatchers("/admin/**").hasRole("ADMIN")
+//                          .requestMatchers("/shop/**").hasRole("SHOPKEEPER")
+//                          .requestMatchers("/secure/**","/shop/**","/admin/**").authenticated()
+//                          .requestMatchers("/api/**").permitAll()
                           .anyRequest().permitAll())
                   .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
           return http.build();
