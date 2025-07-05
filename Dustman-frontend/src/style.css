@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+
+
+@layer base {
+  /* button {
+    @apply bg-[#b7f3bb] text-white px-4 py-2 rounded;
+  } */
+  /* div{
+    @apply bg-white
+  } */
+
+  body {
+    @apply bg-[#B2D1E6] text-gray-800;
+  }
+}
+
+@layer components{
+  .navbg{
+    @apply bg-[#cfe3f188] text-gray-800;
+  }
+}
+
 @layer utilities {
 
     ::-webkit-scrollbar {

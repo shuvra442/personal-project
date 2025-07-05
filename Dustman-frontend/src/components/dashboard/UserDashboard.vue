@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen pt-12 px-5 pb-10 bg-[#E8F5E9] space-y-6">
+    <div class="min-h-screen pt-12 px-5 pb-10 space-y-6" v-motion="animation">
         <!-- Welcome Header -->
         <div class="text-center md:text-left space-y-1">
             <h1 class="text-3xl font-bold text-gray-800">Welcome Back, User</h1>
@@ -159,4 +159,9 @@ function formatDate(date: Date): string {
         day: "numeric",
     });
 }
+
+const animation = {
+    initial: { opacity: 0, y: 20 },
+    enter: { opacity: 1, y: 0, transition: { duration: 450 } },
+};
 </script>

@@ -10,9 +10,10 @@
                     alt="dust"
                 />
             </div>
-            <!-- Desktop -->
+
+            <!-- Desktop Navigation -->
             <div
-                class="hidden md:flex backdrop-blur-3xl rounded-4xl mt-2 w-fit h-full items-center justify-between px-4"
+                class="hidden md:flex backdrop-blur-3xl rounded-4xl mt-2 w-fit h-full items-center justify-between px-4 navbg"
             >
                 <router-link
                     v-for="(item, index) in navItems"
@@ -35,9 +36,9 @@
                     </div>
                 </router-link>
             </div>
-            <!-- Mobile -->
+
+            <!-- Mobile Hamburger -->
             <div class="md:hidden flex items-center">
-                <!-- Hamburger Icon -->
                 <button
                     class="text-gray-700 hover:text-blue-500 transition-colors cursor-pointer"
                     @click="handleMobileMenuToggle"
@@ -46,7 +47,7 @@
                 </button>
             </div>
 
-            <!-- Mobile Menu Items  -->
+            <!-- Mobile Menu -->
             <div
                 v-if="showMobileMenu"
                 class="md:hidden absolute top-12 left-0 w-full backdrop-blur-md shadow-lg z-40 flex flex-col items-center space-y-2 py-4"
@@ -74,6 +75,8 @@
                 </router-link>
             </div>
         </nav>
+
+        <!-- Login Modal -->
         <div
             v-if="showModal"
             class="fixed inset-0 backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50"
@@ -88,11 +91,12 @@
                 <Login
                     :show-currencypdf-modals="true"
                     @close-popup-modal="showModal = false"
-                ></Login>
+                />
             </motion-div>
         </div>
+
+        <!--  Sidebar -->
         <div class="flex w-screen overflow-hidden relative">
-            <!-- Sidebar -->
             <div
                 :class="[
                     'h-screen pt-14 relative transition-all duration-300 ease-in-out shadow-md bg-gradient-to-b from-[#A3C7E1] to-[#69a9d6]',
@@ -101,9 +105,12 @@
                 v-show="activeSidepanel"
             >
                 <div class="pt-4 text-white h-full flex flex-col">
-                    <!-- Profile Section -->
                     <div class="flex flex-col items-center px-2">
                         <div
+                            v-motion
+                            :initial="{ opacity: 0 }"
+                            :enter="{ opacity: 1 }"
+                            :transition="{ duration: 0.051 }"
                             :class="[
                                 'rounded-full border-2 overflow-hidden transition-all duration-300 ease-in-out flex-shrink-0',
                                 openSidePanel
@@ -130,11 +137,63 @@
                         </transition>
                     </div>
 
-                    <!-- Menu Items -->
+                    <!-- Sidebar Items -->
                     <div class="mt-8 flex-1 overflow-y-auto">
                         <div
                             v-for="(item, index) in slideItems"
                             :key="index"
+                            class="flex items-center py-3 px-4 cursor-pointer group"
+                            :class="[
+                                openSidePanel
+                                    ? 'hover:bg-[#A3C7E1]'
+                                    : 'hover:bg-[#A3C7E1]',
+                                activeItem === index
+                                    ? 'bg-[#A3C7E1] border-l-4 rounded-l-lg border-[#2e5774]'
+                                    : '',
+                            ]"
+                            @click="setActiveItem(index, item.path)"
+                            v-motion
+                            :initial="{ opacity: 0, y: 60 }"
+                            :enter="{ opacity: 1, y: 0 }"
+                            :transition="{
+                                duration: 10,
+                                delay: 1,
+                            }"
+                        >
+                            <component
+                                :is="item.icon"
+                                :class="[
+                                    'transition-transform duration-300',
+                                    activeItem === index
+                                        ? 'text-[#133e5c] scale-110'
+                                        : 'text-[#133e5c]',
+                                    openSidePanel ? 'mr-3' : 'mx-auto',
+                                ]"
+                                :size="20"
+                            />
+                            <transition name="slide">
+                                <span
+                                    v-if="openSidePanel"
+                                    class="text-[#133e5c] font-medium text-sm truncate transition-opacity duration-300"
+                                    :class="{
+                                        'font-bold': activeItem === index,
+                                    }"
+                                >
+                                    {{ item.name }}
+                                </span>
+                            </transition>
+                        </div>
+                    </div>
+
+                    <!-- <div class="mt-8 flex-1 overflow-y-auto">
+                        <div
+                            v-for="(item, index) in slideItems"
+                            :key="index"
+                            v-if="loaded"
+                            v-motion
+                            :initial="{ opacity: 0, x: 20 }"
+                            :enter="{ opacity: 1, x: 0 }"
+                            :transition="{ duration: 0.5, delay: index * 14 }"
                             class="flex items-center py-3 px-4 cursor-pointer group"
                             :class="[
                                 openSidePanel
@@ -169,10 +228,10 @@
                                 </span>
                             </transition>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
-                <!-- Toggle Button -->
+                <!-- Sidebar Toggle -->
                 <button
                     class="absolute bottom-8 cursor-pointer -right-3 bg-white rounded-full p-1 shadow-lg border border-amber-300 z-10 transition-all hover:scale-110"
                     @click="openSidePanels"
@@ -185,8 +244,9 @@
                 </button>
             </div>
 
+            <!-- Main View -->
             <router-view
-                :key="route?.fullPath"
+                :key="route.fullPath"
                 class="h-screen overflow-y-auto"
             />
         </div>
@@ -194,60 +254,61 @@
 </template>
 
 <script lang="ts">
-import { useSampleStore } from "./stores/sample";
-import { useRoute, useRouter } from "vue-router";
 import {
     defineComponent,
-    onMounted,
+    ref,
     reactive,
     toRefs,
     computed,
-    ref,
+    onMounted,
     watch,
 } from "vue";
-import { MotionDirective as motion } from "@vueuse/motion";
-
+import { useRoute, useRouter } from "vue-router";
+import { useSampleStore } from "./stores/sample";
 import Login from "./components/common/Login.vue";
 import {
     AlignLeft,
     ChevronLeft,
     ChevronRight,
+    CircleHelpIcon,
     CircleUserRound,
     HouseIcon,
     IndianRupeeIcon,
+    ListOrdered,
     Settings,
     UserPen,
     UserPlus,
 } from "lucide-vue-next";
+import { MotionDirective as motion } from "@vueuse/motion";
+
 export default defineComponent({
-    components: {
-        Login,
-        AlignLeft,
-        ChevronRight,
-        ChevronLeft,
-        CircleUserRound,
-        UserPlus,
-        UserPen,
-    },
     name: "App",
     directives: {
         motion: motion(),
     },
+    components: {
+        Login,
+        AlignLeft,
+        ChevronLeft,
+        ChevronRight,
+        CircleUserRound,
+        UserPlus,
+        UserPen,
+    },
     setup() {
-        const activeSidepanel = ref(false);
-        const openSidePanel = ref(false);
         const route = useRoute();
         const router = useRouter();
         const sampleStore = useSampleStore();
-        const isLoginMode = computed(() => sampleStore.getLoginState);
+
+        const activeSidepanel = ref(false);
+        const openSidePanel = ref(false);
         const showModal = ref(false);
         const showMobileMenu = ref(false);
+        const activeItem = ref(0);
+
+        const isLoginMode = computed(() => sampleStore.getLoginState);
 
         const state = reactive({
-            routeName: computed(() => {
-                return route?.name;
-            }),
-
             navItems: [
                 { label: "Home", path: "/home" },
                 { label: "About", path: "/about" },
@@ -257,50 +318,68 @@ export default defineComponent({
             slideItems: [
                 { icon: CircleUserRound, name: "Profile", path: "/profile" },
                 { icon: HouseIcon, name: "Dashboard", path: "/dashboard" },
+                { icon: ListOrdered, name: "Booking", path: "/booking" },
                 { icon: IndianRupeeIcon, name: "Payment", path: "/payment" },
                 { icon: Settings, name: "Setting", path: "/setting" },
+                { icon: CircleHelpIcon, name: "Help & Support", path: "/help" },
             ],
         });
-        const activeItem = ref(0);
 
         const setActiveItem = (index: number, path: string) => {
             activeItem.value = index;
             router.push(path);
-            // Add your navigation logic here
         };
+
+        const updateActiveItemFromRoute = () => {
+            const index = state.slideItems.findIndex(
+                (item) => item.path === route.path
+            );
+            if (index !== -1) {
+                activeItem.value = index;
+            }
+        };
+
         watch(
             () => route.path,
-            (newPath) => {
-                // Only hide side panel for root URL `/`
-                activeSidepanel.value = newPath !== "/";
+            () => {
+                updateActiveItemFromRoute();
+                activeSidepanel.value = route.path !== "/";
             },
-            { immediate: true } // Run on initial load too
+            { immediate: true }
         );
-        // isLoginMode.value ? "Logout" :
+
         const showLoginModal = () => {
             showModal.value = true;
         };
+
         const handleMobileMenuToggle = () => {
             showMobileMenu.value = !showMobileMenu.value;
-            console.log("Mobile menu toggled:", showMobileMenu.value);
         };
+
         const handleLogin = () => {
             showModal.value = false;
         };
-        onMounted(() => {
-            sampleStore.fetchSampleData();
-        });
+
         const openSidePanels = () => {
-            if (openSidePanel.value) {
-                console.log("Toggle clicked=>", openSidePanel.value);
-            } else {
-                console.log("Toggle clicked=>2", openSidePanel.value);
-            }
             openSidePanel.value = !openSidePanel.value;
         };
+        const slideAnimation = {
+            initial: { opacity: 0 },
+            enter: { opacity: 1, transition: { duration: 150 } },
+        };
+
+        onMounted(() => {
+            sampleStore.fetchSampleData();
+            updateActiveItemFromRoute();
+            setTimeout(() => {
+                loaded.value = true;
+            }, 100); // you can tweak this delay if needed
+        });
+
+        const loaded = ref(false); // flag to trigger animation
+
         return {
             ...toRefs(state),
-            sampleStore,
             route,
             showModal,
             showLoginModal,
@@ -313,6 +392,8 @@ export default defineComponent({
             openSidePanel,
             activeItem,
             setActiveItem,
+            slideAnimation,
+            loaded,
         };
     },
 });

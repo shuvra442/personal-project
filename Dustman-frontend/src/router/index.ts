@@ -6,6 +6,8 @@ import DashboardView from '@/views/DashboardView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import PaymentView from '@/views/PaymentView.vue'
 import SettingView from '@/views/SettingView.vue'
+import OrderView from '@/views/BookingView.vue'
+import BookingView from '@/views/BookingView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +49,12 @@ const router = createRouter({
       path: '/setting',
       name: 'setting',
       component: SettingView,
+      // meta:{requiresAuth :true}
+    },
+    {
+      path: '/booking',
+      name: 'booking',
+      component: BookingView,
       // meta:{requiresAuth :true}
     },
     {
