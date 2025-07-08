@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+
+
+@layer base {
+  /* button {
+    @apply bg-[#b7f3bb] text-white px-4 py-2 rounded;
+  } */
+  /* div{
+    @apply bg-white
+  } */
+
+  body {
+    @apply bg-[#B2D1E6] text-gray-800;
+  }
+}
+
+@layer components{
+  .navbg{
+    @apply bg-[#cfe3f188] text-gray-800;
+  }
+}
+
 @layer utilities {
 
     ::-webkit-scrollbar {
@@ -54,4 +75,13 @@
   .custom-button:hover {
     background-color: #2563eb;   /* hover:bg-blue-600 */
   }
-  
+  .router-link-active,
+.router-link-exact-active {
+  --tw-text-opacity: 1 !important;
+  color: rgb(59 130 246 / var(--tw-text-opacity)) !important;
+  font-weight: 500 !important;
+  /* position: ; */
+}
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
