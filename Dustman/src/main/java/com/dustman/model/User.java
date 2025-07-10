@@ -4,7 +4,9 @@ import com.dustman.utils.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -26,6 +28,7 @@ public class User {
 
     private String userImageId;
 
+    @Enumerated(EnumType.STRING)
     private Roles role;
 
     private Date createdAt;
@@ -36,4 +39,12 @@ public class User {
     @OneToOne
     private Shop shopId;
 
+    @OneToMany(mappedBy = "userId")
+    private List<Order> orders;
+
+
+    @OneToMany(mappedBy = "paymentId")
+    private List<Payment> payments;
+
 }
+

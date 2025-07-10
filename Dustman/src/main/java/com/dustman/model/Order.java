@@ -14,6 +14,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int ordId;
 
+    @Enumerated(EnumType.STRING)
     private OrdStatus status;
 
     private Date ordTime;

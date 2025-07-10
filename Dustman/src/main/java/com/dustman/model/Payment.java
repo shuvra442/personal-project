@@ -1,10 +1,7 @@
 package com.dustman.model;
 
-import com.dustman.utils.enums.OrdStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.dustman.utils.enums.PaymentStatus;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,10 +14,14 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int paymentId;
 
-    private String transecId;
+    private String transactionId;
 
-    private OrdStatus paymentStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     private Date paymentTime;
+
+    @ManyToOne
+    private User userId;
 
 }
