@@ -1,8 +1,15 @@
 package com.dustman.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.Date;
+
+@Data
 @Entity
+@Getter
+@Setter
 public class Shop {
 
     @Id
@@ -23,31 +30,12 @@ public class Shop {
 
     private String garbagePrice;
 
-    /**
-     * Connection to User entity (assuming it's another @Entity class)
-     */
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private Date createdAt;
+
     @OneToOne
     private User userId;
-
-
-    public Shop() {
-    }
-
-    //  Full constructor
-    public Shop(int shopId, String shopEmail, String shopImage, String shopImgId, String shopAdd,
-                boolean onlineStatus, String garbageAmt, String garbagePrice, User userId) {
-        this.shopId = shopId;
-        this.shopEmail = shopEmail;
-        this.shopImage = shopImage;
-        this.shopImgId = shopImgId;
-        this.shopAdd = shopAdd;
-        this.onlineStatus = onlineStatus;
-        this.garbageAmt = garbageAmt;
-        this.garbagePrice = garbagePrice;
-        this.userId = userId;
-    }
-
-    // Getters and Setters
 
     public int getShopId() {
         return shopId;
@@ -113,11 +101,35 @@ public class Shop {
         this.garbagePrice = garbagePrice;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public User getUserId() {
         return userId;
     }
 
     public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public Shop() {
+    }
+
+    public Shop(int shopId, String shopEmail, String shopImage, String shopImgId, String shopAdd, boolean onlineStatus, String garbageAmt, String garbagePrice, Date createdAt, User userId) {
+        this.shopId = shopId;
+        this.shopEmail = shopEmail;
+        this.shopImage = shopImage;
+        this.shopImgId = shopImgId;
+        this.shopAdd = shopAdd;
+        this.onlineStatus = onlineStatus;
+        this.garbageAmt = garbageAmt;
+        this.garbagePrice = garbagePrice;
+        this.createdAt = createdAt;
         this.userId = userId;
     }
 }

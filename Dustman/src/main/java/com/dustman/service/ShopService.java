@@ -1,81 +1,56 @@
 package com.dustman.service;
 
 import com.dustman.model.Shop;
-
 import com.dustman.repository.ShopRepo;
 import com.dustman.utils.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ShopService {
 
     @Autowired
-    private ShopRepo shopRepo;
+    ShopRepo shopRepo;
 
-    public ResponseData<?> createUser(Shop shop) {
-        if (shop.getShopEmail() != null) {
-            Optional<Shop> existingShop = shopRepo.findByShopEmail(shop.getShopEmail());
-            if (existingShop.isPresent()) {
-                return new ResponseData<>(409, "Shop Email already exists", null);
-            }
-        }
-
-        Shop savedShop = shopRepo.save(shop);
-        return new ResponseData<>(200, "Shop Created", savedShop);
+    public ResponseData<Shop> createShop(Shop shop) {
+        Shop saved = shopRepo.save(shop);
+        return new ResponseData<>(200, "Shop created successfully", saved);
     }
 
-// For get details of shop by ShopId
-    public ResponseData<?> getShopById(int shopId) {
-        Optional<Shop> shopOptional = shopRepo.findById(shopId);
-        if (shopOptional.isPresent()) {
-            return new ResponseData<>(200, "Shop found", shopOptional.get());
-        } else {
-            return new ResponseData<>(404, "Shop not found", null);
-        }
+    public ResponseData<List<Shop>> getAllShops() {
+
+        return new ResponseData<>(200, "Shop list fetched", shopRepo.findAll());
     }
 
-
-// To update the data of shop
-
-    public ResponseData<?> updateShop(int shopId, Shop updatedShop) {
-        Optional<Shop> existingShopOptional = shopRepo.findById(shopId);
-
-        if (existingShopOptional.isEmpty()) {
-            return new ResponseData<>(404, "Shop not found", null);
-        }
-
-        Shop existingShop = existingShopOptional.get();
-
-        // Update fields
-        existingShop.setShopEmail(updatedShop.getShopEmail());
-        existingShop.setShopImage(updatedShop.getShopImage());
-        existingShop.setShopImgId(updatedShop.getShopImgId());
-        existingShop.setShopAdd(updatedShop.getShopAdd());
-        existingShop.setOnlineStatus(updatedShop.isOnlineStatus());
-        existingShop.setGarbageAmt(updatedShop.getGarbageAmt());
-        existingShop.setGarbagePrice(updatedShop.getGarbagePrice());
-        existingShop.setUserId(updatedShop.getUserId());
-
-        Shop savedShop = shopRepo.save(existingShop);
-        return new ResponseData<>(200, "Shop updated successfully", savedShop);
+    public ResponseData<Shop> getShopById(int id) {
+        return shopRepo.findById(id)
+                .map(shop -> new ResponseData<>(200, "Shop found", shop))
+                .orElseGet(() -> new ResponseData<>(400, "Shop not found", null));
     }
 
-
-
-    //To delete the shop
-    public ResponseData<?> deleteShop(int shopId) {
-        Optional<Shop> shopOptional = shopRepo.findById(shopId);
-        if (shopOptional.isEmpty()) {
-            return new ResponseData<>(404, "Shop not found", null);
+    public ResponseData<Shop> updateShop(int id, Shop updatedShop) {
+        Optional<Shop> optional = shopRepo.findById(id);
+        if (optional.isEmpty()) {
+            return new ResponseData<>(400, "Shop not found", null);
         }
 
-        shopRepo.deleteById(shopId);
-        return new ResponseData<>(200, "Shop deleted successfully", null);
+        Shop shop = optional.get();
+        shop.setShopAdd(updatedShop.getShopAdd());
+        shop.setOnlineStatus(updatedShop.isOnlineStatus());
+        shop.setGarbageAmt(updatedShop.getGarbageAmt());
+        shop.setGarbagePrice(updatedShop.getGarbagePrice());
+
+        return new ResponseData<>(200, "Shop updated", shopRepo.save(shop));
     }
 
-
-
+    public ResponseData<?> deleteShop(int id) {
+        if (!shopRepo.existsById(id)) {
+            return new ResponseData<>(400, "Shop not found", null);
+        }
+        shopRepo.deleteById(id);
+        return new ResponseData<>(200, "Shop deleted", null);
+    }
 }

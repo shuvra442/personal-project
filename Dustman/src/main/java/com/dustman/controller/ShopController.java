@@ -2,54 +2,42 @@ package com.dustman.controller;
 
 
 import com.dustman.model.Shop;
-
 import com.dustman.service.ShopService;
-
 import com.dustman.utils.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/shop")
 public class ShopController {
 
+
     @Autowired
-    private ShopService shopService;
+    ShopService shopService;
 
-    //To Create Shop
-    @PostMapping("/createShop")
-    public ResponseEntity<?> createShop(@RequestBody Shop shop) {
-        ResponseData<?> responseData = shopService.createUser(shop);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData.getData());
+    @PostMapping("/create")
+    public ResponseEntity<ResponseData<Shop>> create(@RequestBody Shop shop) {
+        return ResponseEntity.ok(shopService.createShop(shop));
     }
 
-    // To get all details of shop by id
+    @GetMapping()
+    public ResponseEntity<ResponseData<?>> getAll() {
+        return ResponseEntity.ok(shopService.getAllShops());
+    }
+
     @GetMapping("/shop/{id}")
-    public ResponseEntity<?> getShopById(@PathVariable("id") int shopId) {
-        ResponseData<?> responseData = shopService.getShopById(shopId);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData.getData());
+    public ResponseEntity<ResponseData<?>> getById(@PathVariable int id) {
+        return ResponseEntity.ok(shopService.getShopById(id));
     }
 
-    // To update Shop details by shop id
-    @PutMapping("/shop/{id}")
-    public ResponseEntity<?> updateShop(@PathVariable("id") int shopId, @RequestBody Shop shop) {
-        ResponseData<?> responseData = shopService.updateShop(shopId, shop);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData.getData());
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseData<?>> update(@PathVariable int id, @RequestBody Shop shop) {
+        return ResponseEntity.ok(shopService.updateShop(id, shop));
     }
 
-
-    // To delete the Shop by shopId
-    @DeleteMapping("/shop/{id}")
-    public ResponseEntity<?> deleteShop(@PathVariable("id") int shopId) {
-        ResponseData<?> responseData = shopService.deleteShop(shopId);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData.getData());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseData<?>> delete(@PathVariable int id) {
+        return ResponseEntity.ok(shopService.deleteShop(id));
     }
-
-
 }
-
