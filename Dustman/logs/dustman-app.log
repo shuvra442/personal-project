@@ -518,3 +518,50 @@ jakarta.servlet.ServletException: No adapter for handler [com.dustman.controller
 2025-07-12 01:24:58 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
 2025-07-12 01:24:58 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
 2025-07-12 01:25:08 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 11.744 seconds (process running for 13.667)
+2025-07-12 19:41:40 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 11940 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-12 19:41:40 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-12 19:41:40 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-12 19:41:46 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 7.306 seconds (process running for 7.965)
+2025-07-12 19:42:32 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 19796 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-12 19:42:32 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-12 19:42:32 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-12 19:43:01 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 1556 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-12 19:43:01 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-12 19:43:01 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-12 19:43:07 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 7.254 seconds (process running for 7.869)
+2025-07-12 19:51:17 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 11164 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-12 19:51:17 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-12 19:51:17 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-12 19:51:22 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 5.946 seconds (process running for 6.531)
+2025-07-12 19:54:53 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 16512 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-12 19:54:53 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-12 19:54:53 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-12 19:54:59 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 6.697 seconds (process running for 7.275)
+2025-07-13 00:39:04 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 13704 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 00:39:04 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 00:39:04 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 00:39:13 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 10.056 seconds (process running for 11.102)
+2025-07-13 00:51:52 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 16420 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 00:51:52 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 00:51:52 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 00:52:01 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 9.504 seconds (process running for 10.327)
+2025-07-13 00:53:11 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 21784 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 00:53:11 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 00:53:11 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 00:53:20 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 10.15 seconds (process running for 10.912)
+2025-07-13 00:57:44 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 2732 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 00:57:44 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 00:57:44 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 00:57:53 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 9.297 seconds (process running for 10.089)
+2025-07-13 01:04:58 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 23624 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 01:04:58 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 01:04:58 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 01:05:07 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 9.396 seconds (process running for 10.164)
+2025-07-13 01:18:51 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 19260 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 01:18:51 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 01:18:51 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 01:18:58 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 7.882 seconds (process running for 8.508)
+2025-07-13 01:21:50 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 23 with PID 2724 (C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman\target\classes started by dalai in C:\Users\dalai\OneDrive\Desktop\DustmanProject\personal-project\Dustman)
+2025-07-13 01:21:50 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-13 01:21:50 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-13 01:21:57 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 8.158 seconds (process running for 8.748)
