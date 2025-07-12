@@ -39,12 +39,13 @@ public class User {
     @OneToOne
     private Shop shopId;
 
+
     @OneToMany(mappedBy = "userId")
     private List<Order> orders;
 
-
-    @OneToMany(mappedBy = "paymentId")
+    @OneToMany(mappedBy = "userId")
     private List<Payment> payments;
+
 
 }
 

@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 @Entity
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -18,10 +19,6 @@ public class Order {
     private OrdStatus status;
 
     private Date ordTime;
-
-    /**
-     * payment to user
-     */
 
     @ManyToOne
     private User userId;
