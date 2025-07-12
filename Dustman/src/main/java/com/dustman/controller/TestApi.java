@@ -12,7 +12,7 @@ public class TestApi {
 
     private static final Logger logger = LoggerFactory.getLogger(TestApi.class);
 
-    @GetMapping
+    @GetMapping("/test")
     public String testLog() {
         logger.info("INFO: /api/test endpoint was called");
         logger.warn("WARN: Just a test warning log");

@@ -3,6 +3,7 @@ package com.dustman.model;
 import com.dustman.utils.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.util.Date;
@@ -15,6 +16,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
+
+    private String name;
 
     private String email;
 
@@ -31,10 +34,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
     @OneToOne
-    private Shop shopId;
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
 
     @OneToMany(mappedBy = "userId")
@@ -42,6 +48,9 @@ public class User {
 
     @OneToMany(mappedBy = "userId")
     private List<Payment> payments;
+
+
+    public User() {}
 
 
     public int getUserId() {
@@ -116,12 +125,12 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public Shop getShopId() {
-        return shopId;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setShopId(Shop shopId) {
-        this.shopId = shopId;
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     public List<Order> getOrders() {
@@ -140,7 +149,7 @@ public class User {
         this.payments = payments;
     }
 
-    public User(int userId, String email, Long phoneNo, String password, String address, String userImage, String userImageId, Roles role, Date createdAt, Shop shopId, List<Order> orders, List<Payment> payments) {
+    public User(int userId, String email, Long phoneNo, String password, String address, String userImage, String userImageId, Roles role, Date createdAt, Shop shop, List<Order> orders, List<Payment> payments) {
         this.userId = userId;
         this.email = email;
         this.phoneNo = phoneNo;
@@ -150,7 +159,7 @@ public class User {
         this.userImageId = userImageId;
         this.role = role;
         this.createdAt = createdAt;
-        this.shopId = shopId;
+        this.shop = shop;
         this.orders = orders;
         this.payments = payments;
     }
