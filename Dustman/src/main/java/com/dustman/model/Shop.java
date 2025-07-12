@@ -8,7 +8,7 @@ import lombok.Data;
 public class Shop {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int shopId;
 
     private String shopEmail;
