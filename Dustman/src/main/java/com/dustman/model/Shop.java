@@ -1,5 +1,9 @@
 package com.dustman.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,6 +39,7 @@ public class Shop {
     private Date createdAt;
 
     @OneToOne
+    @JsonIgnoreProperties({ "payments", "orders" ,"shop"})
     private User userId;
 
     public int getShopId() {

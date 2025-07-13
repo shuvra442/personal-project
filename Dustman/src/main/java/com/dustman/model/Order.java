@@ -1,6 +1,7 @@
 package com.dustman.model;
 
 import com.dustman.utils.enums.OrdStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,11 +27,13 @@ public class Order {
     private Date createdAt;
 
     @ManyToOne
+    @JsonIgnoreProperties({ "payments", "orders" ,"shop"})
     private User userId;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")
-    private Shop shop;
+    @JsonIgnoreProperties("user_id")
+    private Shop shop ;
 
 
     public Order() {

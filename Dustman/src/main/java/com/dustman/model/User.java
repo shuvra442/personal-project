@@ -1,6 +1,7 @@
 package com.dustman.model;
 
 import com.dustman.utils.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,10 +45,10 @@ public class User {
 
 
     @OneToMany(mappedBy = "userId")
-    private List<Order> orders;
+    private List<Order> orders ;
 
     @OneToMany(mappedBy = "userId")
-    private List<Payment> payments;
+    private List<Payment> payments ;
 
 
     public User() {}
