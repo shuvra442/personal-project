@@ -1,22 +1,14 @@
 <template>
     <div class="h-full relative scroll-smooth">
-        <nav
+        <nav v-if="route.path !== '/login'"
             class="h-12 w-full fixed top-0 z-50 flex flex-row justify-between px-5 bg-transparent bg-opacity-70"
         >
-            <div class="flex items-center justify-between px-4">
-                <img
-                    class="rounded-[50%] h-9"
-                    src="/src/assets/dust-logo.png"
-                    alt="dust"
-                />
-            </div>
-
             <!-- Desktop Navigation -->
             <div
                 class="hidden md:flex backdrop-blur-3xl rounded-4xl mt-2 w-fit h-full items-center justify-between px-4 navbg"
             >
                 <router-link
-                    v-for="(item, index) in navItems"
+                v-for="(item, index) in navItems"
                     :key="index"
                     :to="item.label === 'Login' ? '' : item.path"
                     class="text-gray-700 hover:text-blue-500 transition-colors flex items-center justify-center flex-row"
@@ -103,7 +95,7 @@
 
         <!--  Sidebar -->
         <div class="flex w-screen overflow-hidden relative">
-            <div
+            <div v-if="route.path !== '/login'"
                 :class="[
                     'h-screen pt-14 relative transition-all duration-300 ease-in-out shadow-md bg-gradient-to-b from-[#A3C7E1] to-[#69a9d6]',
                     openSidePanel ? 'w-60' : 'w-14',
@@ -191,50 +183,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="mt-8 flex-1 overflow-y-auto">
-                        <div
-                            v-for="(item, index) in slideItems"
-                            :key="index"
-                            v-if="loaded"
-                            v-motion
-                            :initial="{ opacity: 0, x: 20 }"
-                            :enter="{ opacity: 1, x: 0 }"
-                            :transition="{ duration: 0.5, delay: index * 14 }"
-                            class="flex items-center py-3 px-4 cursor-pointer group"
-                            :class="[
-                                openSidePanel
-                                    ? 'hover:bg-[#A3C7E1]'
-                                    : 'hover:bg-[#A3C7E1]',
-                                activeItem === index
-                                    ? 'bg-[#A3C7E1] border-l-4 rounded-l-lg border-[#2e5774]'
-                                    : '',
-                            ]"
-                            @click="setActiveItem(index, item.path)"
-                        >
-                            <component
-                                :is="item.icon"
-                                :class="[
-                                    'transition-transform duration-300',
-                                    activeItem === index
-                                        ? 'text-[#133e5c] scale-110'
-                                        : 'text-[#133e5c]',
-                                    openSidePanel ? 'mr-3' : 'mx-auto',
-                                ]"
-                                :size="20"
-                            />
-                            <transition name="slide">
-                                <span
-                                    v-if="openSidePanel"
-                                    class="text-[#133e5c] font-medium text-sm truncate transition-opacity duration-300"
-                                    :class="{
-                                        'font-bold': activeItem === index,
-                                    }"
-                                >
-                                    {{ item.name }}
-                                </span>
-                            </transition>
-                        </div>
-                    </div> -->
                 </div>
 
                 <!-- Sidebar Toggle -->

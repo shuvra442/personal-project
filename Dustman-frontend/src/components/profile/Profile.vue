@@ -137,7 +137,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import sampleData from "@/stores/sampleData";
 import { Edit, X } from "lucide-vue-next";
 import { ref } from "vue";

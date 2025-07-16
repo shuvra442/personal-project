@@ -348,7 +348,7 @@ export default defineComponent({
                 console.log("store.getUserInfo=>", store.getUserInfo);
                 loginProcess.value = false;
                 toast.success("Login Successfully");
-                router.push("/");
+                router.push("/home");
             } catch {
             } finally {
                 registerProcess.value = true;

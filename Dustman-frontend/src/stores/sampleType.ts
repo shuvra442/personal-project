@@ -1,4 +1,4 @@
-export interface sampleType {
-    status: string,
-    method: string
-}
+// export interface sampleType {
+//     status: string,
+//     method: string
+// }
