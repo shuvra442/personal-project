@@ -294,8 +294,11 @@
 </template>
 
 <script lang="ts">
+import { login, register } from "@/service/sampleService";
+import { useSampleStore } from "@/stores/sample";
 import { ArrowRight } from "lucide-vue-next";
 import { defineComponent, reactive, ref, toRefs } from "vue";
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toast-notification";
 export default defineComponent({
     components: {
@@ -309,6 +312,9 @@ export default defineComponent({
     },
     emits: ["closePopupModal"],
     setup(props, { emit }) {
+        const router = useRouter();
+
+        const store = useSampleStore();
         const toast = useToast();
         const loginProcess = ref(false);
         const registerProcess = ref(false);
@@ -333,34 +339,31 @@ export default defineComponent({
             state.isLoginMode = !state.isLoginMode;
         };
 
-        const handleLogin = () => {
+        const handleLogin = async () => {
             console.log("Login Data=>", state.loginData);
-            loginProcess.value = true;
-            setTimeout(() => {
-                //TODO: login api call
-                // toast.success("Login successful!", {
-                //     position: "top-right",
-                //     duration: 3000,
-                // });
+            try {
+                loginProcess.value = true;
+                const response = await login(state.loginData);
+                store.setUserInfo(true, response.email, response.role);
+                console.log("store.getUserInfo=>", store.getUserInfo);
                 loginProcess.value = false;
-
-                closePopup(true);
-            }, 10000);
+                toast.success("Login Successfully");
+                router.push("/");
+            } catch {
+            } finally {
+                registerProcess.value = true;
+            }
         };
 
-        const handleRegister = () => {
+        const handleRegister = async () => {
             console.log("Login Data=>", state.registerData);
             registerProcess.value = true;
-            setTimeout(() => {
-                //TODO: login api call
-                // toast.success("Login successful!", {
-                //     position: "top-right",
-                //     duration: 3000,
-                // });
+            try {
+                await register(state.registerData);
+            } catch {
+            } finally {
                 registerProcess.value = false;
-
-                closePopup(true);
-            }, 10000);
+            }
         };
 
         return {

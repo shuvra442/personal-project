@@ -10,7 +10,7 @@ export const useSampleStore = defineStore('sampleStore',{
     sampleLoading: false as boolean,
     error: null as string | null,
     userInfo:{
-      login:true as boolean,
+      login:false as boolean,
       userName: "" as string,
       role:"user" as string,
     },
@@ -40,6 +40,6 @@ export const useSampleStore = defineStore('sampleStore',{
         })
 
     }
-  }
-  
+  },
+    persist: true,
 })

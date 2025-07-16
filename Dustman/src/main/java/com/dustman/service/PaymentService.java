@@ -14,16 +14,16 @@ public class PaymentService {
     @Autowired
     PaymentRepo paymentRepo;
 
-    public ResponseData<Payment> makePayment(Payment payment) {
-        return new ResponseData<>(200, "Payment successful", paymentRepo.save(payment));
+    public ResponseData makePayment(Payment payment) {
+        return new ResponseData(200, paymentRepo.save(payment));
     }
 
-    public ResponseData<List<Payment>> getAllPayments() {
-        return new ResponseData<>(200, "Payment list fetched", paymentRepo.findAll());
+    public ResponseData getAllPayments() {
+        return new ResponseData(200,  paymentRepo.findAll());
     }
 
-    public ResponseData<List<Payment>> getPaymentsByUser(int userId) {
-        return new ResponseData<>(200, "User payments fetched", paymentRepo.findByUserId_UserId(userId));
+    public ResponseData getPaymentsByUser(int userId) {
+        return new ResponseData(200,  paymentRepo.findByUserId_UserId(userId));
     }
 
 }

@@ -17,27 +17,32 @@ public class ShopController {
     ShopService shopService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseData<Shop>> create(@RequestBody Shop shop) {
-        return ResponseEntity.ok(shopService.createShop(shop));
+    public ResponseEntity<?> create(@RequestBody Shop shop) {
+        ResponseData responseData=shopService.createShop(shop);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping()
-    public ResponseEntity<ResponseData<?>> getAll() {
-        return ResponseEntity.ok(shopService.getAllShops());
+    public ResponseEntity<?> getAll() {
+        ResponseData responseData=shopService.getAllShops();
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping("/shop/{id}")
-    public ResponseEntity<ResponseData<?>> getById(@PathVariable int id) {
-        return ResponseEntity.ok(shopService.getShopById(id));
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        ResponseData responseData=shopService.getShopById(id);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseData<?>> update(@PathVariable int id, @RequestBody Shop shop) {
-        return ResponseEntity.ok(shopService.updateShop(id, shop));
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Shop shop) {
+        ResponseData responseData=shopService.updateShop(id, shop);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseData<?>> delete(@PathVariable int id) {
-        return ResponseEntity.ok(shopService.deleteShop(id));
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        ResponseData responseData=shopService.deleteShop(id);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 }

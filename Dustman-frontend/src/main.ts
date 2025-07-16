@@ -5,7 +5,12 @@ import { MotionPlugin } from '@vueuse/motion'
 
 import VueToast from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
+// const pinia = createPinia()
+// pinia.use(piniaPluginPersistedstate)
+
+// app.use(pinia)
 
 import App from './App.vue'
 import router from './router'
@@ -14,12 +19,14 @@ import AOS from 'aos'
 import { useSampleStore } from './stores/sample'
 
 const app = createApp(App)
-
+const pinia = createPinia()
 app.use(createPinia())
 app.use(router)
 app.use(VueToast)
 app.use(MotionPlugin)
+pinia.use(piniaPluginPersistedstate)
 
+app.use(pinia)
 router.beforeEach((to,from,next)=>{
   const dataStore=useSampleStore();
   if (to.meta.requiresAuth && !dataStore.getLoginState) {

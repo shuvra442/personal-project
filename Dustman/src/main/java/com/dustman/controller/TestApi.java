@@ -1,6 +1,9 @@
 package com.dustman.controller;
 
 import com.dustman.dto.UserDto;
+import com.dustman.model.User;
+import com.dustman.service.UserService;
+import com.dustman.utils.ResponseData;
 import com.dustman.utils.jwt.JWTCreate;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.angus.mail.iap.Response;
@@ -11,11 +14,9 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController()
 public class TestApi {
@@ -23,10 +24,11 @@ public class TestApi {
     private static final Logger logger = LoggerFactory.getLogger(TestApi.class);
 
     @Autowired
-    UserDetailsService userDetailsService;
-
+    UserService userService;
     @Autowired
     JWTCreate jwtCreate;
+    @Autowired
+    UserDetailsService userDetailsService;
 
     @GetMapping("/test")
     public String testLog() {
@@ -38,14 +40,38 @@ public class TestApi {
     }
 
 
-
     @PostMapping("/login")
-    public ResponseEntity getLogin(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getEmail());
-        String businessKey = jwtCreate.generateToken(userDetails);
-        ResponseCookie responseCookie = ResponseCookie.from("set_cookie", businessKey).httpOnly(true).path("/").maxAge(24 * 60 * 60).build();
-        logger.info("the cookie is ::-->", responseCookie);
-        httpServletResponse.setHeader("Set-Cookie", responseCookie.toString());
-        return ResponseEntity.ok().body("Working");
+    public ResponseEntity<?> getLogin(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) {
+        System.out.println("userDto=>"+userDto.toString());
+        try{
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getEmail());
+
+            ResponseData responseData = userService.login(userDetails,userDto);
+
+            String businessKey = jwtCreate.generateToken(userDetails);
+            if (responseData.status() == 200) {
+                ResponseCookie responseCookie = ResponseCookie
+                        .from("AccessToken", businessKey)
+                        .sameSite("Lax")
+                        .httpOnly(true)
+                        .path("/")
+                        .maxAge(24 * 60 * 60).build();
+                System.out.println("the cookie is ::-->" + responseCookie);
+                logger.info("the cookie is ::-->", responseCookie);
+                httpServletResponse.setHeader("Set-Cookie", responseCookie.toString());
+            }
+
+            return ResponseEntity.status(responseData.status()).body(responseData.data());
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(400).body("User Not Fount");
+        }
+
+    }
+
+    // CREATE
+    @PostMapping("/create")
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        ResponseData responseData =  userService.createUser(user);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 }

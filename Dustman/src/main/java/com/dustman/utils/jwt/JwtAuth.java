@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,7 +20,7 @@ import java.util.Arrays;
 @Component
 public class JwtAuth extends OncePerRequestFilter {
 
-    JWTCreate jwtCreate;
+    private final JWTCreate jwtCreate;
 
     public JwtAuth(JWTCreate jwtCreate) {
         this.jwtCreate = jwtCreate;
@@ -29,33 +30,55 @@ public class JwtAuth extends OncePerRequestFilter {
     UserDetailsService userDetailsService;
 
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
 
-        String businessKey = Arrays.stream(request.getCookies())
-                .filter(cookie -> "AccessToken".equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
 
         try {
-            if (businessKey != null) {
-                jwtCreate.validateToken(businessKey);
-                String userId = jwtCreate.extractUserName(businessKey);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+            String accessToken = this.extractToken(request.getCookies());
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(userDetails);
+            if (accessToken != null) {
+                jwtCreate.validateToken(accessToken);
+                if (jwtCreate.isTokenExpired(accessToken)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token expire login again");
+                    return;
+                }
+                String userName = jwtCreate.extractUserName(accessToken);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+//                jwtCreate.validateToken(accessToken);
+//                String userId = jwtCreate.extractUserName(accessToken);
+//                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+//
+//                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//                usernamePasswordAuthenticationToken.setDetails(userDetails);
+//
+//                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
+            filterChain.doFilter(request, response);
+        } catch (UsernameNotFoundException e) {
+
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(e.getMessage());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write(e.getMessage());
         }
     }
 
+    private String extractToken(Cookie[] cookies) {
+        if (cookies != null) {
+            return Arrays.stream(cookies)
+                    .filter(cookie -> "AccessToken".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
 
+        }
+        return null;
+    }
 }
