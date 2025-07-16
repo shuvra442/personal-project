@@ -33,6 +33,7 @@ public class User {
     private String userImageId;
 
     @Enumerated(EnumType.STRING)
+    @Column()
     private Roles role;
 
     @CreationTimestamp

@@ -15,26 +15,26 @@ public class ShopService {
     @Autowired
     ShopRepo shopRepo;
 
-    public ResponseData<Shop> createShop(Shop shop) {
+    public ResponseData createShop(Shop shop) {
         Shop saved = shopRepo.save(shop);
-        return new ResponseData<>(200, "Shop created successfully", saved);
+        return new ResponseData(200, saved);
     }
 
-    public ResponseData<List<Shop>> getAllShops() {
+    public ResponseData getAllShops() {
 
-        return new ResponseData<>(200, "Shop list fetched", shopRepo.findAll());
+        return new ResponseData(200, shopRepo.findAll());
     }
 
-    public ResponseData<Shop> getShopById(int id) {
+    public ResponseData getShopById(int id) {
         return shopRepo.findById(id)
-                .map(shop -> new ResponseData<>(200, "Shop found", shop))
-                .orElseGet(() -> new ResponseData<>(400, "Shop not found", null));
+                .map(shop -> new ResponseData(200, shop))
+                .orElseGet(() -> new ResponseData(400, "Shop not found"));
     }
 
-    public ResponseData<Shop> updateShop(int id, Shop updatedShop) {
+    public ResponseData updateShop(int id, Shop updatedShop) {
         Optional<Shop> optional = shopRepo.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseData<>(400, "Shop not found", null);
+            return new ResponseData(400, "Shop not found");
         }
 
         Shop shop = optional.get();
@@ -43,14 +43,14 @@ public class ShopService {
         shop.setGarbageAmt(updatedShop.getGarbageAmt());
         shop.setGarbagePrice(updatedShop.getGarbagePrice());
 
-        return new ResponseData<>(200, "Shop updated", shopRepo.save(shop));
+        return new ResponseData(200,  shopRepo.save(shop));
     }
 
-    public ResponseData<?> deleteShop(int id) {
+    public ResponseData deleteShop(int id) {
         if (!shopRepo.existsById(id)) {
-            return new ResponseData<>(400, "Shop not found", null);
+            return new ResponseData(400, "Shop not found");
         }
         shopRepo.deleteById(id);
-        return new ResponseData<>(200, "Shop deleted", null);
+        return new ResponseData(200, "Shop deleted");
     }
 }

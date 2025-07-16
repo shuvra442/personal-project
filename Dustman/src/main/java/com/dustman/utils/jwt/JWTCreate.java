@@ -4,9 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +18,13 @@ import java.util.function.Function;
 @Component
 public class JWTCreate {
 
-    String secret = "Berer";
-    String key = " ";
+    //    String secret = "";
+//    String key = "BererBererBererBererBererBererBererBerer";
+    private final SecretKey secretKey = Keys.hmacShaKeyFor("BererBererBererBererBererBererBererBerer".getBytes(StandardCharsets.UTF_8));
 
     public void validateToken(String token) throws JwtException {
         Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token);
     }
@@ -29,10 +33,11 @@ public class JWTCreate {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String userID(String token) {
-        return extractClaim(token, claims ->
-                userID(claims.get("userId", String.class)));
+    public boolean isTokenExpired(String token) {
+        final Date expiration = extractClaim(token, Claims::getExpiration);
+        return expiration.before(new Date());
     }
+
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -41,7 +46,7 @@ public class JWTCreate {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -55,7 +60,7 @@ public class JWTCreate {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 15 * 24 * 60 * 60 * 1000)) // 15 days 15 * 24 * 60 * 60
-                .signWith(SignatureAlgorithm.HS256, key)
+                .signWith(secretKey)
                 .compact();
-   }
+    }
 }

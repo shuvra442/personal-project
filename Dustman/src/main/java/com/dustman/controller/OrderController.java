@@ -15,22 +15,26 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/place")
-    public ResponseEntity<ResponseData<Order>> place(@RequestBody Order order) {
-        return ResponseEntity.ok(orderService.placeOrder(order));
+    public ResponseEntity<?> place(@RequestBody Order order) {
+        ResponseData responseData=orderService.placeOrder(order);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping
-    public ResponseEntity<ResponseData<?>> getAll() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<?> getAll() {
+        ResponseData responseData=orderService.getAllOrders();
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseData<?>> getById(@PathVariable int id) {
-        return ResponseEntity.ok(orderService.getOrderById(id));
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        ResponseData responseData=orderService.getOrderById(id);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ResponseData<?>> getByUser(@PathVariable int userId) {
-        return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
+    public ResponseEntity<?> getByUser(@PathVariable int userId) {
+        ResponseData responseData=orderService.getOrdersByUserId(userId);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 }

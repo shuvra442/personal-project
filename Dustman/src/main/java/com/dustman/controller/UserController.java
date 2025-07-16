@@ -14,39 +14,34 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    // CREATE
-    @PostMapping("/create")
-    public ResponseEntity createUser(@RequestBody User user) {
-      ResponseData responseData =  userService.createUser(user);
-      return ResponseEntity.status(responseData.getStatus()).body(responseData);
-    }
+
 
     // READ: Single user by ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable int id) {
-        ResponseData<?> responseData = userService.getUserById(id);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData);
+        ResponseData responseData = userService.getUserById(id);
+        return ResponseEntity.status(responseData.status()).body(responseData);
     }
 
     // READ: All users
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
-        ResponseData<?> responseData = userService.getAllUsers();
-        return ResponseEntity.status(responseData.getStatus()).body(responseData);
+        ResponseData responseData = userService.getAllUsers();
+        return ResponseEntity.status(responseData.status()).body(responseData);
     }
 
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody User updatedUser) {
-        ResponseData<?> responseData = userService.updateUser(id, updatedUser);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData);
+        ResponseData  responseData = userService.updateUser(id, updatedUser);
+        return ResponseEntity.status(responseData.status()).body(responseData);
     }
 
     // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
-        ResponseData<?> responseData = userService.deleteUser(id);
-        return ResponseEntity.status(responseData.getStatus()).body(responseData);
+        ResponseData  responseData = userService.deleteUser(id);
+        return ResponseEntity.status(responseData.status()).body(responseData);
     }
 
 }

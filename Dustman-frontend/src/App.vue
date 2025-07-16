@@ -22,7 +22,11 @@
                     class="text-gray-700 hover:text-blue-500 transition-colors flex items-center justify-center flex-row"
                     active-class="text-blue-500 font-medium"
                     @click.prevent="
-                        item.label === 'Login' ? showLoginModal() : null
+                        item.label === 'Login'
+                            ? showLoginModal()
+                            : item.label === 'Logout'
+                              ? handleLogout()
+                              : null
                     "
                 >
                     <div
@@ -61,7 +65,9 @@
                     @click.prevent="
                         item.label === 'Login'
                             ? showLoginModal()
-                            : (showMobileMenu = false)
+                            : item.label === 'Logout'
+                              ? (handleLogout(), (showMobileMenu = false))
+                              : (showMobileMenu = false)
                     "
                 >
                     <motion-div
@@ -280,6 +286,7 @@ import {
     UserPlus,
 } from "lucide-vue-next";
 import { MotionDirective as motion } from "@vueuse/motion";
+import { useToast } from "vue-toast-notification";
 
 export default defineComponent({
     name: "App",
@@ -307,14 +314,33 @@ export default defineComponent({
         const activeItem = ref(0);
 
         const isLoginMode = computed(() => sampleStore.getLoginState);
+        const navItems = computed(() => [
+            { label: "Home", path: "/home" },
+            { label: "About", path: "/about" },
+            { label: "Contact Us", path: "/contact" },
+            {
+                label: isLoginMode.value ? "Logout" : "Login",
+                path: isLoginMode.value ? "/logout" : "/",
+            },
+        ]);
 
         const state = reactive({
-            navItems: [
-                { label: "Home", path: "/home" },
-                { label: "About", path: "/about" },
-                { label: "Contact Us", path: "/contact" },
-                { label: isLoginMode.value ? "Logout" : "Login", path: "/" },
-            ],
+            // navItems: [
+            //     { label: "Home", path: "/home" },
+            //     { label: "About", path: "/about" },
+            //     { label: "Contact Us", path: "/contact" },
+            //     { label: isLoginMode.value ? "Logout" : "Login", path: "/" },
+            // ],
+            //             const navItems = computed(() => [
+            //     { label: "Home", path: "/home" },
+            //     { label: "About", path: "/about" },
+            //     { label: "Contact Us", path: "/contact" },
+            //     {
+            //         label: isLoginMode.value ? "Logout" : "Login",
+            //         path: isLoginMode.value ? "/logout" : "/",
+            //     },
+            // ])
+
             slideItems: [
                 { icon: CircleUserRound, name: "Profile", path: "/profile" },
                 { icon: HouseIcon, name: "Dashboard", path: "/dashboard" },
@@ -376,7 +402,13 @@ export default defineComponent({
             }, 100); // you can tweak this delay if needed
         });
 
-        const loaded = ref(false); // flag to trigger animation
+        const loaded = ref(false);
+        const toast = useToast();
+        const handleLogout = () => {
+            sampleStore.setUserInfo(false, "", "");
+            toast.success("Logout sucessfully");
+            router.push("/");
+        };
 
         return {
             ...toRefs(state),
@@ -394,6 +426,8 @@ export default defineComponent({
             setActiveItem,
             slideAnimation,
             loaded,
+            navItems,
+            handleLogout,
         };
     },
 });

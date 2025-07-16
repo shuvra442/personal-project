@@ -15,17 +15,20 @@ public class PaymentController {
     PaymentService paymentService;
 
     @PostMapping("/make")
-    public ResponseEntity<ResponseData<Payment>> pay(@RequestBody Payment payment) {
-        return ResponseEntity.ok(paymentService.makePayment(payment));
+    public ResponseEntity<?> pay(@RequestBody Payment payment) {
+        ResponseData responseData=paymentService.makePayment(payment);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping
-    public ResponseEntity<ResponseData<?>> getAll() {
-        return ResponseEntity.ok(paymentService.getAllPayments());
+    public ResponseEntity<?> getAll() {
+        ResponseData responseData=paymentService.getAllPayments();
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ResponseData<?>> getByUser(@PathVariable int userId) {
-        return ResponseEntity.ok(paymentService.getPaymentsByUser(userId));
+    public ResponseEntity<?> getByUser(@PathVariable int userId) {
+        ResponseData responseData=paymentService.getPaymentsByUser(userId);
+        return ResponseEntity.status(responseData.status()).body(responseData.data());
     }
 }
