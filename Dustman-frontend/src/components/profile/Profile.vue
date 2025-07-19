@@ -1,11 +1,11 @@
 <template>
-    <div
+    <!-- <div
         v-if="edit"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/15 backdrop-blur-md"
-    >
-        <EditProfile :popup="edit" @close="edit = false" />
-        <!-- <EditProfile :popup="edit" @close="edit = false" /> -->
-    </div>
+    > -->
+    <!-- <EditProfile :popup="edit" @close="edit = false" /> -->
+    <!-- <EditProfile :popup="edit" @close="edit = false" /> -->
+    <!-- </div> -->
 
     <div
         class="h-full bg-mint flex justify-center p-6 font-sans overflow-y-scroll"
@@ -138,12 +138,14 @@
 </template>
 
 <script setup lang="ts">
-import sampleData from "@/stores/sampleData";
+// import sampleData from "@/stores/sampleData";
+
 import { Edit, X } from "lucide-vue-next";
 import { ref } from "vue";
 import { useToast } from "vue-toast-notification";
-import EditProfile from "./EditProfile.vue";
-
+// import EditProfile from "./EditProfile.vue";
+import { useLoinRegStore } from "@/stores/login/LoginRegStore";
+const store = useLoinRegStore();
 const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
 const toast = useToast();
 const edit = ref(false);
@@ -158,5 +160,5 @@ const fadeInTop = {
     enter: { opacity: 1, transition: { duration: 150 } },
 };
 
-const userInfo = sampleData.user;
+const userInfo = store.getLoginData;
 </script>

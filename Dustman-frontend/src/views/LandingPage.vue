@@ -89,7 +89,8 @@
 <script lang="ts">
 // import LoginCommon from "@/components/common/LoginCommon.vue";
 import Login from "@/components/common/Login.vue";
-import { useSampleStore } from "@/stores/sample";
+import { useLoinRegStore } from "@/stores/login/LoginRegStore";
+// import { useSampleStore } from "@/stores/sample";
 import { reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 
@@ -102,7 +103,7 @@ export default {
     setup() {
         const showModal = ref(false);
         const route = useRouter();
-        const isLogin = useSampleStore().getLoginState;
+        const isLogin = useLoinRegStore().getIsLogin;
         const bookNow = () => {
             if (isLogin) {
                 route.push("/dashboard");

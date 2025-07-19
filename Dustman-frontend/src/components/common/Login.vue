@@ -294,8 +294,8 @@
 </template>
 
 <script lang="ts">
-import { login, register } from "@/service/sampleService";
-import { useSampleStore } from "@/stores/sample";
+// import { login, register } from "@/service/sampleService";
+// import { useSampleStore } from "@/stores/sample";
 import { ArrowRight } from "lucide-vue-next";
 import { defineComponent, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
@@ -314,7 +314,7 @@ export default defineComponent({
     setup(props, { emit }) {
         const router = useRouter();
 
-        const store = useSampleStore();
+        // const store = useSampleStore();
         const toast = useToast();
         const loginProcess = ref(false);
         const registerProcess = ref(false);
@@ -343,9 +343,9 @@ export default defineComponent({
             console.log("Login Data=>", state.loginData);
             try {
                 loginProcess.value = true;
-                const response = await login(state.loginData);
-                store.setUserInfo(true, response.email, response.role);
-                console.log("store.getUserInfo=>", store.getUserInfo);
+                // const response = await login(state.loginData);
+                // store.setUserInfo(true, response.email, response.role);
+                // console.log("store.getUserInfo=>", store.getUserInfo);
                 loginProcess.value = false;
                 toast.success("Login Successfully");
                 router.push("/home");
@@ -359,7 +359,7 @@ export default defineComponent({
             console.log("Login Data=>", state.registerData);
             registerProcess.value = true;
             try {
-                await register(state.registerData);
+                // await register(state.registerData);
             } catch {
             } finally {
                 registerProcess.value = false;

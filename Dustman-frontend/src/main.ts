@@ -16,7 +16,8 @@ import App from './App.vue'
 import router from './router'
 import  'aos/dist/aos.css';
 import AOS from 'aos'
-import { useSampleStore } from './stores/sample'
+import { useLoinRegStore } from './stores/login/LoginRegStore'
+// import { useSampleStore } from './stores/sample'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -28,8 +29,8 @@ pinia.use(piniaPluginPersistedstate)
 
 app.use(pinia)
 router.beforeEach((to,from,next)=>{
-  const dataStore=useSampleStore();
-  if (to.meta.requiresAuth && !dataStore.getLoginState) {
+  const dataStore=useLoinRegStore();
+  if (to.meta.requiresAuth && !dataStore.getIsLogin) {
 
     next({path:"/"})
     // next()

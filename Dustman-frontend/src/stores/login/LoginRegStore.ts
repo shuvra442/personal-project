@@ -9,24 +9,27 @@ export const useLoinRegStore = defineStore('loginRegStore',{
     login: [] as loginType[] | null,
     reg : [] as regType[] | null,
     isLoading: false,
+    isLogin:false
 
   }),
 
   getters: {
 
-    postLoginState:(state)=> state.login,
+    getLoginData:(state)=> state.login,
+    getIsLogin:(state)=>state.isLogin
   
   },
   actions: {
   
-    fetchLoginData(payload: loginType) {
+   async fetchLoginData(payload: loginType) {
         this.isLoading = true
         console.log("The data is :: ",payload.email, payload.password)
-        return postLoginData(payload)
+        return await postLoginData(payload)
         .then((response: AxiosResponse)=> {
             this.isLoading = false
             this.login = response.data
             console.log("The data is :::", this.login)
+            this.isLogin=true
         })
         .catch((error)=> {
             console.log("The error is :", error)
@@ -34,4 +37,5 @@ export const useLoinRegStore = defineStore('loginRegStore',{
 
     }
   },
+      persist: true,
 })

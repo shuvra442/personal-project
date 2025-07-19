@@ -98,7 +98,7 @@
                             @blur="handleBlur"
                         />
 
-                        <ul
+                        <!-- <ul
                             v-if="isFocused && suggestions.length > 0"
                             class="absolute z-50 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg"
                         >
@@ -110,7 +110,7 @@
                             >
                                 {{ suggestion.formatted }}
                             </li>
-                        </ul>
+                        </ul> -->
                     </div>
                 </div>
 
@@ -143,21 +143,22 @@
 </template>
 
 <script setup lang="ts">
-import sampleData from "@/stores/sampleData";
+// import sampleData from "@/stores/sampleData";
 import { X } from "lucide-vue-next";
 import { ref, watch } from "vue";
-import type { GeoapifySuggestion } from "@/stores/sampleData";
+// import type { GeoapifySuggestion } from "@/stores/sampleData";
 defineProps({
     popup: Boolean,
 });
 const emit = defineEmits(["close"]);
-const userInfo = sampleData.user;
 // const name = ref(userInfo.name);
 // const address = ref(userInfo.address);
 // const email = ref(userInfo.email);
 const previewImage = ref("");
-const suggestions = ref<GeoapifySuggestion[]>([]);
+// const suggestions = ref<GeoapifySuggestion[]>([]);
 
+import { useLoinRegStore } from "@/stores/login/LoginRegStore";
+const store = useLoinRegStore();
 const formField = ref({
     name: userInfo.name,
     address: userInfo.address,
@@ -165,6 +166,7 @@ const formField = ref({
 });
 const isFocused = ref(false);
 
+const userInfo = store.getLoginData;
 const handleFocus = () => {
     isFocused.value = true;
 };
