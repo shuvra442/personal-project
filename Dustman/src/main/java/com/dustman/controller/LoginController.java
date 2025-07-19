@@ -1,7 +1,7 @@
 package com.dustman.controller;
 
 import com.dustman.dto.UserDto;
-import com.dustman.model.User;
+import com.dustman.service.CloudinaryService;
 import com.dustman.service.UserService;
 import com.dustman.utils.ResponseData;
 import com.dustman.utils.jwt.JWTCreate;
@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController()
 public class LoginController {
 
@@ -27,6 +29,8 @@ public class LoginController {
     JWTCreate jwtCreate;
     @Autowired
     UserDetailsService userDetailsService;
+    @Autowired
+    CloudinaryService cloudinaryService;
 
     @PostMapping("/login")
     public ResponseEntity<?> getLogin(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) {
@@ -60,8 +64,18 @@ public class LoginController {
 
     // User CREATE
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        ResponseData responseData =  userService.createUser(user);
+    public ResponseEntity<?> createUser(@ModelAttribute UserDto userDto) {
+        ResponseData responseData =  userService.createUser(userDto);
         return ResponseEntity.status(responseData.status()).body(responseData.data());
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> upload(@RequestBody String  file) {
+        try{
+            String responseData = cloudinaryService.deleteFile(file);
+            return ResponseEntity.ok(responseData);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

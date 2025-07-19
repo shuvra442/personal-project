@@ -10,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 import java.util.List;
 
-@Data
+//@Data
 @Entity
 public class User {
 
@@ -54,6 +54,13 @@ public class User {
 
     public User() {}
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getUserId() {
         return userId;
