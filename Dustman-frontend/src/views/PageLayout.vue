@@ -75,25 +75,6 @@
             </div>
         </nav>
 
-        <!-- Login Modal -->
-        <!-- <div
-        v-if="showModal"
-        class="fixed inset-0 backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50"
-        @click.self="showModal = false"
-    >
-        <motion-div
-            :initial="{ opacity: 0, scale: 0.8 }"
-            :animate="{ opacity: 1, scale: 1 }"
-            :transition="{ duration: 0.3 }"
-            class="shadow-lg w-full max-w-full"
-        >
-            <Login
-                :show-currencypdf-modals="true"
-                @close-popup-modal="showModal = false"
-            />
-        </motion-div>
-    </div> -->
-
         <!--  Sidebar -->
         <div class="flex w-screen overflow-hidden relative">
             <div
@@ -266,10 +247,6 @@ export default defineComponent({
             { label: "Home", path: "/home" },
             { label: "About", path: "/about" },
             { label: "Contact Us", path: "/contact" },
-            // {
-            //     label: isLoginMode.value ? "Logout" : "Login",
-            //     path: isLoginMode.value ? "/logout" : "/login",
-            // },
         ]);
 
         const state = reactive({
