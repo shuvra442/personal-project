@@ -199,8 +199,6 @@ import {
     watch,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-// import { useSampleStore } from "./stores/sample";
-// import Login from "./components/common/Login.vue";
 import {
     AlignLeft,
     ChevronLeft,
@@ -223,7 +221,6 @@ export default defineComponent({
         motion: motion(),
     },
     components: {
-        // Login,
         AlignLeft,
         ChevronLeft,
         ChevronRight,
@@ -234,7 +231,6 @@ export default defineComponent({
     setup() {
         const route = useRoute();
         const router = useRouter();
-        // const sampleStore = useSampleStore();
 
         const activeSidepanel = ref(false);
         const openSidePanel = ref(false);
@@ -242,7 +238,6 @@ export default defineComponent({
         const showMobileMenu = ref(false);
         const activeItem = ref(0);
 
-        // const isLoginMode = computed(() => sampleStore.getLoginState);
         const navItems = computed(() => [
             { label: "Home", path: "/home" },
             { label: "About", path: "/about" },
@@ -304,17 +299,15 @@ export default defineComponent({
         };
 
         onMounted(() => {
-            // sampleStore.fetchSampleData();
             updateActiveItemFromRoute();
             setTimeout(() => {
                 loaded.value = true;
-            }, 100); // you can tweak this delay if needed
+            }, 100);
         });
 
         const loaded = ref(false);
         const toast = useToast();
         const handleLogout = () => {
-            // sampleStore.setUserInfo(false, "", "");
             toast.success("Logout sucessfully");
             router.push("/");
         };
@@ -327,7 +320,6 @@ export default defineComponent({
             handleLogin,
             handleMobileMenuToggle,
             showMobileMenu,
-            // isLoginMode,
             activeSidepanel,
             openSidePanels,
             openSidePanel,
