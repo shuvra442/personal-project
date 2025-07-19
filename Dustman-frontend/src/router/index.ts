@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LogIne from '@/components/common/Log-ine.vue'
 import PageLayout from '@/views/PageLayout.vue'
 import NewVuetiFy from '@/views/NewVuetiFy.vue'
+import HomePage from '@/components/common/homePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +13,13 @@ const router = createRouter({
       name: 'LoginPage',
       component: LogIne,
     },
+
+     {
+      path: '/home',
+      name: 'HomePage',
+      component: HomePage,
+    },
+
 
     {
       path: '/',
