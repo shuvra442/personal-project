@@ -13,7 +13,7 @@ const router = createRouter({
       name: 'LoginPage',
       component: LogIne,
     },
-
+    
      {
       path: '/home',
       name: 'HomePage',
