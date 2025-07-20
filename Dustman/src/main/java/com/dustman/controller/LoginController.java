@@ -1,12 +1,11 @@
 package com.dustman.controller;
 
 import com.dustman.dto.UserDto;
-import com.dustman.model.User;
+import com.dustman.service.CloudinaryService;
 import com.dustman.service.UserService;
 import com.dustman.utils.ResponseData;
 import com.dustman.utils.jwt.JWTCreate;
 import jakarta.servlet.http.HttpServletResponse;
-import org.eclipse.angus.mail.iap.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController()
-public class TestApi {
+import java.io.IOException;
 
-    private static final Logger logger = LoggerFactory.getLogger(TestApi.class);
+@RestController()
+public class LoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     UserService userService;
@@ -29,22 +29,15 @@ public class TestApi {
     JWTCreate jwtCreate;
     @Autowired
     UserDetailsService userDetailsService;
-
-    @GetMapping("/test")
-    public String testLog() {
-        logger.info("INFO: /api/test endpoint was called");
-        logger.warn("WARN: Just a test warning log");
-        logger.error("ERROR: Just a test error log");
-
-        return "Log test completed!";
-    }
-
+    @Autowired
+    CloudinaryService cloudinaryService;
 
     @PostMapping("/login")
     public ResponseEntity<?> getLogin(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) {
         System.out.println("userDto=>"+userDto.toString());
         try{
             UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getEmail());
+            logger.info("User Email -->", userDetails);
 
             ResponseData responseData = userService.login(userDetails,userDto);
 
@@ -63,15 +56,26 @@ public class TestApi {
 
             return ResponseEntity.status(responseData.status()).body(responseData.data());
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(400).body("User Not Fount");
+            logger.error("Error in loginController -->", e.getMessage());
+            return ResponseEntity.status(400).body("User Not Found");
         }
 
     }
 
-    // CREATE
-    @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        ResponseData responseData =  userService.createUser(user);
+    // User CREATE
+    @PostMapping("/register")
+    public ResponseEntity<?> createUser(@ModelAttribute UserDto userDto) {
+        ResponseData responseData =  userService.createUser(userDto);
         return ResponseEntity.status(responseData.status()).body(responseData.data());
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> upload(@RequestBody String  file) {
+        try{
+            String responseData = cloudinaryService.deleteFile(file);
+            return ResponseEntity.ok(responseData);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
