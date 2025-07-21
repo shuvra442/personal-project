@@ -1,0 +1,8 @@
+2025-07-20 15:26:03 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 21.0.7 with PID 9520 (H:\Spring project\Dustman\target\classes started by Sukanta in H:\Spring project)
+2025-07-20 15:26:03 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-20 15:26:03 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-20 15:37:04 [main] INFO  com.dustman.DustmanApplication - Starting DustmanApplication using Java 21.0.7 with PID 12952 (H:\Spring project\Dustman\target\classes started by Sukanta in H:\Spring project)
+2025-07-20 15:37:04 [main] DEBUG com.dustman.DustmanApplication - Running with Spring Boot v3.4.2, Spring v6.2.2
+2025-07-20 15:37:04 [main] INFO  com.dustman.DustmanApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-20 15:37:20 [main] DEBUG com.dustman.utils.jwt.JwtAuth - Filter 'jwtAuth' configured for use
+2025-07-20 15:37:25 [main] INFO  com.dustman.DustmanApplication - Started DustmanApplication in 23.015 seconds (process running for 27.266)
