@@ -3,7 +3,7 @@ import LogIne from '@/components/common/Log-ine.vue'
 import PageLayout from '@/views/PageLayout.vue'
 import NewVuetiFy from '@/views/NewVuetiFy.vue'
 import HomePage from '@/components/common/homePage.vue'
-import LandinPage from '@/views/LandinPage.vue'
+import LandinPage from '@/views/LandingPage.vue'
 import ShopDetails from '@/views/ShopDetails.vue'
 
 const router = createRouter({
