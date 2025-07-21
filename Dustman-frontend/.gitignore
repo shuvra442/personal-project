@@ -3,3 +3,4 @@ dist/
 # Logs  
 .qodo/
 .env.example
+.env
