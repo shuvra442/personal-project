@@ -5,7 +5,7 @@ import NewVuetiFy from '@/views/NewVuetiFy.vue'
 import HomePage from '@/components/common/homePage.vue'
 import LandinPage from '@/views/LandingPage.vue'
 import ShopDetails from '@/views/ShopDetails.vue'
-import LogIn from '@/components/LogIn.vue'
+import LogIn from '@/components/common/LogIn.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
