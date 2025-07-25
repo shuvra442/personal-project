@@ -131,19 +131,19 @@ const registerUser = () => {
                 <v-col cols="12" sm="6">
                   <v-text-field v-model="user.phoneNo" label="Phone Number" prepend-inner-icon="mdi-phone" type="tel" variant="outlined" density="compact" />
                 </v-col>
+                <v-col cols="12" sm="6" >
+                  <v-text-field v-model="user.address" label="Address" prepend-inner-icon="mdi-map-marker" variant="outlined" density="compact" />
+                </v-col>
 
                 <v-col cols="12" sm="6">
                   <v-text-field v-model="user.password" label="Password" prepend-inner-icon="mdi-lock" type="password" variant="outlined" density="compact" required />
                 </v-col>
 
-                <v-col cols="12" >
-                  <v-text-field v-model="user.address" label="Address" prepend-inner-icon="mdi-map-marker" variant="outlined" density="compact" />
-                </v-col>
-
                 <v-col cols="12" sm="6">
-                  <v-select v-model="user.role" :items="roles" label="Role" prepend-inner-icon="mdi-account-badge" variant="outlined" density="compact" required />
+                  <v-text-field v-model="user.password" label="Confirm Password" prepend-inner-icon="mdi-lock" type="password" variant="outlined" density="compact" required />
                 </v-col>
 
+                
                 <v-col cols="12" sm="6">
                   <v-file-input v-model="user.userImage" label="Profile Image" prepend-inner-icon="mdi-image" append-icon="" accept="image/*" variant="outlined" density="compact" />
                 </v-col>
