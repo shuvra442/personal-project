@@ -172,62 +172,38 @@ const registerUser = () => {
   </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, ref } from 'vue'
-import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  name: 'RegisterPage',
+<script setup>
+import { ref } from 'vue';
 
-  setup() {
-    const router = useRouter()
-    const formRef = ref()
-    const loading = ref(false)
+const formRef = ref(null);
+const loading = ref(false);
 
-    const state = reactive({
-      user: {
-        name: '',
-        email: '',
-        password: '',
-        phoneNo: '',
-        address: '',
-        role: '',
-        userImage: null as File | null
-      }
-    })
+const roles = ['USER', 'ADMIN'];
 
-    const roles = ['USER', 'ADMIN']
+const user = ref({
+  name: '',
+  email: '',
+  password: '',
+  phoneNo: '',
+  address: '',
+  role: '',
+  userImage: null,
+});
 
-    const handleRegister = async () => {
-      const form = formRef.value
-      const isValid = await form?.validate()
-      if (!isValid?.valid) {
-        console.warn('Form validation failed')
-        return
-      }
+const handleRegister = () => {
+  if (!formRef.value.validate()) return;
+  loading.value = true;
 
-      loading.value = true
+  const formData = new FormData();
+  Object.keys(user.value).forEach(key => {
+    formData.append(key, user.value[key]);
+  });
 
-      const formData = new FormData()
-      Object.entries(state.user).forEach(([key, value]) => {
-        formData.append(key, value as any)
-      })
-
-      setTimeout(() => {
-        console.log('Form submitted:', Object.fromEntries(formData as any))
-        loading.value = false
-        router.push('/login')
-      }, 1500)
-    }
-
-    return {
-      user: toRefs(state.user), 
-      roles,
-      formRef,
-      loading,
-      handleRegister
-    }
-  }
-})
+  setTimeout(() => {
+    console.log('Form submitted:', Object.fromEntries(formData));
+    loading.value = false;
+  }, 1500);
+};
 </script>
 
