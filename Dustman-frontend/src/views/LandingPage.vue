@@ -54,7 +54,7 @@
     <!-- Hero Section -->
     <v-main>
       <v-container class="py-16">
-        <v-row align="center" justify="space-between">
+        <v-row class=" flex align-center justify-between" >
           <v-col cols="12" md="6" class="pr-md-8">
             <h1 class="text-h2 font-weight-bold mb-4">
               Turn Your <span class="text-success">Waste</span> into <span class="text-success">Wealth</span>
