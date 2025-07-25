@@ -1,4 +1,4 @@
-<template>
+"<template>
   <v-app>
     <!-- Header -->
     <v-app-bar app color="white" elevation="2">
@@ -315,13 +315,15 @@
 
 <script lang="ts">
 import { name } from "@vue/eslint-config-prettier/skip-formatting";
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
+
 
 export default defineComponent({
     name: "Landing",
     directives: {},
     components: {},
+    
     setup() {
         const router = useRouter();
 
@@ -329,7 +331,7 @@ export default defineComponent({
             router.push("/home");
         };
 
-        const drawer = false;
+        const drawer = ref(false);
         const state = reactive({
             stats: [
                 {
@@ -437,6 +439,7 @@ export default defineComponent({
             ...toRefs(state),
             goToHome,
             drawer,
+            
         };
     },
 });
