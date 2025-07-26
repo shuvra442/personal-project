@@ -1,11 +1,10 @@
 package com.dustman.model;
 
-import com.dustman.utils.enums.OrdStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.dustman.utils.enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -14,13 +13,95 @@ import java.util.Date;
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paymentId;
 
-    private String transecId;
+    private String transactionId;
 
-    private OrdStatus paymentStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     private Date paymentTime;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private Date createdAt;
+
+    @ManyToOne
+    @JsonIgnoreProperties({ "payments", "orders" ,"shop"})
+    private User userId;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    @JsonIgnoreProperties({ "shop" ,"user_id"})
+    private Order order;
+
+    public Payment() {
+    }
+
+    public Payment(int paymentId, String transactionId, PaymentStatus paymentStatus, Date paymentTime, Date createdAt, User userId, Order order) {
+        this.paymentId = paymentId;
+        this.transactionId = transactionId;
+        this.paymentStatus = paymentStatus;
+        this.paymentTime = paymentTime;
+        this.createdAt = createdAt;
+        this.userId = userId;
+        this.order = order;
+    }
+
+    public int getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Date getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(Date paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }
