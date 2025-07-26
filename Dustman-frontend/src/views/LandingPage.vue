@@ -16,7 +16,7 @@
           <v-btn text href="#for-shops">For Shops</v-btn>
           <v-btn text href="#testimonials">Testimonials</v-btn>
           <v-btn text href="#contact">Contact</v-btn>
-          <v-btn outlined color="success" class="ml-4" to="/login">Log In</v-btn>
+          <v-btn outlined color="success" class="ml-4" @click="openLogInDialog()">Log In</v-btn>
           <v-btn color="success" class="ml-2" to="/register">Sign Up</v-btn>
         </div>
         <v-app-bar-nav-icon @click="drawer = !drawer" class="d-md-none"></v-app-bar-nav-icon>
@@ -70,7 +70,6 @@
                 color="success" 
                 size="x-large" 
                 class="mb-4"
-                @click="goToHome"
               >
                 List Your Shop
               </v-btn>
@@ -174,7 +173,6 @@
                   color="primary" 
                   block 
                   size="x-large"
-                  @click="goToHome"
                 >
                   List Your Shop
                 </v-btn>
@@ -223,7 +221,6 @@
               color="white" 
               size="x-large" 
               class="text-success"
-              @click="goToHome"
             >
               Get Started Today
             </v-btn>
@@ -310,28 +307,108 @@
       </v-footer>
     </v-main>
   </v-app>
+
+
+  <v-dialog v-model="openLogIn" width="900" scroll-strategy="none" >
+    <v-container fluid>
+      <v-col
+            cols="12"
+            class="d-flex flex-column justify-center align-center px-4"
+          >
+            <v-card
+              class="pa-4 rounded-lg elevation-4"
+              max-width="400"
+              width="100%"
+            >
+
+            <v-card-title class="d-flex">
+              <v-spacer />
+              <v-btn size="small" icon variant="text" @click="openLogIn=false">
+                <v-icon color="red">mdi-minus-circle</v-icon>
+              </v-btn>
+            </v-card-title>
+              <!-- Lock Icon -->
+              <v-card-title class="d-flex justify-center">
+                <v-avatar color="primary" size="48">
+                  <v-icon size="26" color="white">mdi-lock</v-icon>
+                </v-avatar>
+              </v-card-title>
+
+              <!-- Welcome Message -->
+              <v-card-title class="text-center text-h6 font-weight-bold">
+                Welcome Back!
+              </v-card-title>
+              <v-card-subtitle class="text-center mb-3 text-body-2 text-grey-darken-4">
+                Log into your account
+              </v-card-subtitle>
+
+              <!-- Login Form -->
+              <v-form ref="formRef" @submit.prevent="submitForm">
+                <v-text-field
+                  v-model="email"
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  density="compact"
+                  class="mb-3"
+                  :rules="emailRules"
+                  required
+                />
+                <v-text-field
+                  v-model="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  density="compact"
+                  class="mb-1"
+                  :rules="passwordRules"
+                  required
+                />
+
+                <v-btn
+                  type="submit"
+                  block
+                  color="green-darken-3"
+                  class="mt-1 text-2xl"
+                >
+                  Log In
+                </v-btn>
+        
+              </v-form>
+              <!-- Sign Up -->
+              <div class="mt-3 text-caption text-center">
+                Don't have an account?
+                <v-btn
+                  variant="text"
+                  size="small"
+                  class="text-primary text-decoration-underline pa-0" 
+                  to="/register"
+                >
+                  Sign up
+                </v-btn>
+              </div>
+            </v-card>
+
+          </v-col>
+    </v-container>
+  </v-dialog>
+
 </template>
 
 
 <script lang="ts">
-import { name } from "@vue/eslint-config-prettier/skip-formatting";
 import { defineComponent, reactive, ref, toRefs } from "vue";
-import { useRouter } from "vue-router";
 
 
 export default defineComponent({
-    name: "Landing",
-    directives: {},
+    name: "Lan-ding",
     components: {},
     
     setup() {
-        const router = useRouter();
-
-        const goToHome = () => {
-            router.push("/home");
-        };
 
         const drawer = ref(false);
+        const formRef = ref()
+
         const state = reactive({
             stats: [
                 {
@@ -434,11 +511,57 @@ export default defineComponent({
                     role: "User for 1 year",
                 },
             ],
+
+            // LogIN Dialog
+            openLogIn: false,
+
+            // validation
+            formRef: '',
+            email: '',
+            password: '',
+
         });
+
+        // const router = useRouter();
+
+        // const goToHome = () => {
+        //     router.push("/home");
+        // };
+
+        // Dialog Open
+        const openLogInDialog = ()=> {
+          state.openLogIn = !state.openLogIn
+        }
+
+      // Email and Password validation
+      const emailRules = [
+        (v: string) => !!v || 'Email is required',
+        (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid',
+      ]
+
+      const passwordRules = [
+        (v: string) => !!v || 'Password is required',
+        (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
+      ]
+
+      // Form submit
+      const submitForm = () => {
+        if (formRef.value?.validate()) {
+          console.log('Form submitted', { email: state.email, password: state.password })
+          // perform login logic
+        } else {
+          console.log('Form is invalid')
+        }
+      }
+
         return {
             ...toRefs(state),
-            goToHome,
             drawer,
+            formRef,
+            openLogInDialog,
+            emailRules,
+            passwordRules,
+            submitForm,
             
         };
     },
