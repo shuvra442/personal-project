@@ -21,6 +21,7 @@ public class Shop {
     private int shopId;
 
     private String shopEmail;
+    private String shopName;
 
     private String shopImage;
 
@@ -48,6 +49,14 @@ public class Shop {
 
     public void setShopId(int shopId) {
         this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
     public String getShopEmail() {
@@ -125,7 +134,7 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(int shopId, String shopEmail, String shopImage, String shopImgId, String shopAdd, boolean onlineStatus, String garbageAmt, String garbagePrice, Date createdAt, User userId) {
+    public Shop(int shopId,  String shopName,String shopEmail, String shopImage, String shopImgId, String shopAdd, boolean onlineStatus, String garbageAmt, String garbagePrice, Date createdAt, User userId) {
         this.shopId = shopId;
         this.shopEmail = shopEmail;
         this.shopImage = shopImage;
@@ -136,5 +145,6 @@ public class Shop {
         this.garbagePrice = garbagePrice;
         this.createdAt = createdAt;
         this.userId = userId;
+        this.shopName =   shopName;
     }
 }

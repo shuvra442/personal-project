@@ -58,8 +58,8 @@ public class UserService {
     }
 
 
-    public ResponseData getUserById(int id) {
-        return userRepo.findById(id)
+    public ResponseData getUserById(String email) {
+        return userRepo.findByEmail(email)
                 .map(user -> new ResponseData(200, user))
                 .orElseGet(() -> new ResponseData(400, "User Not Found"));
 

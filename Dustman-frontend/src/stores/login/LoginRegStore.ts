@@ -13,7 +13,7 @@ export const useLoinRegStore = defineStore('loginRegStore',{
 
   }),
 
-  getters: {
+  getters: { 
 
     getLoginData:(state)=> state.login,
     getIsLogin:(state)=>state.isLogin
