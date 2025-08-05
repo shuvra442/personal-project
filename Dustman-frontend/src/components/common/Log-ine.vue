@@ -1,12 +1,12 @@
-<template>
+<!-- <template>
     <div class="flex justify-center items-center w-full">
         <div class="bg-white rounded-xl overflow-hidden shadow-xl w-full max-w-4xl h-[600px] flex flex-col">
 
-            <!-- Form Container -->
+           
             <div class="flex flex-1 overflow-hidden">
-                <!-- Left Side (Form) -->
+                
                 <div class="w-full md:w-1/2 p-8 overflow-hidden">
-                    <!-- Login Form -->
+                    
                     <div v-if="isLogin" class="h-full flex flex-col justify-center">
                         <span class="text-2xl font-bold text-center mb-4 text-[#6AB092]"> Good to see you again! </span>
                         <div class="space-y-6 mt-3">
@@ -105,7 +105,7 @@
 
                 </div>
 
-                <!-- Right Side -->
+               
                 <div class="hidden md:flex w-1/2 bg-white p-8 flex-col justify-center items-center overflow-hidden">
                     <div key="login-visual" class="text-center w-full h-full flex flex-col justify-center">
                         <img src="@/assets/login-image.png" alt="Login"
@@ -145,11 +145,11 @@ export default defineComponent({
         const state = reactive({
             isLogin: true,
 
-            // Login
+            
             email: '',
             password: '',
 
-            // reg
+           
             name: '',
             regEmail: '',
             regPass: '',
@@ -160,7 +160,7 @@ export default defineComponent({
                 email: state.email,
                 password: state.password
             };
-            console.log("called handeller --> ", logInPayload.email, logInPayload.password);
+            console.log("called handeller -- ", logInPayload.email, logInPayload.password);
             store.fetchLoginData(logInPayload);
             router.push("/home")
         };
@@ -175,4 +175,4 @@ export default defineComponent({
 
 })
 
-</script>
+</script> -->

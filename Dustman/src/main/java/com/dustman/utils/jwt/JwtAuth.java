@@ -38,9 +38,10 @@ public class JwtAuth extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("Enter into doFilterInternal ");
 
         try {
-            String accessToken = this.extractToken(request.getCookies());
+            String accessToken = jwtCreate.extractToken(request.getCookies());
 
             if (accessToken != null) {
                 jwtCreate.validateToken(accessToken);
@@ -65,25 +66,26 @@ public class JwtAuth extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (UsernameNotFoundException e) {
-
+            System.out.println("Enter intoUsernameNotFoundException ");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(e.getMessage());
 
         } catch (Exception e) {
+            System.out.println("Enter into Exception ");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write(e.getMessage());
         }
     }
 
-    private String extractToken(Cookie[] cookies) {
-        if (cookies != null) {
-            return Arrays.stream(cookies)
-                    .filter(cookie -> "AccessToken".equals(cookie.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
-
-        }
-        return null;
-    }
+//    private String extractToken(Cookie[] cookies) {
+//        if (cookies != null) {
+//            return Arrays.stream(cookies)
+//                    .filter(cookie -> "AccessToken".equals(cookie.getName()))
+//                    .map(Cookie::getValue)
+//                    .findFirst()
+//                    .orElse(null);
+//
+//        }
+//        return null;
+//    }
 }
