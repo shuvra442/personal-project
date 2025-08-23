@@ -170,12 +170,6 @@ export default defineComponent({
 
         const handleLogin = async () => {
             const form = formRef.value;
-            // const isValid = await form?.validate();
-
-            // if (!isValid.valid) {
-            //     console.warn("Form validation failed");
-            //     return;
-            // }
             const isValid = await form?.validate();
 
             if (!isValid) {

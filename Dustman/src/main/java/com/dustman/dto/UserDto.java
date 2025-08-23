@@ -10,6 +10,8 @@ public class UserDto {
     private String address;
     private String phoneNo;
     private MultipartFile file;
+    private String userImage;
+    private String userImageId;
 
     public String getName() {
         return name;
@@ -62,12 +64,33 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String name, String email, String password, String address, String phoneNo, MultipartFile file) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.phoneNo = phoneNo;
-        this.file = file;
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getUserImageId() {
+        return userImageId;
+    }
+
+    public void setUserImageId(String userImageId) {
+        this.userImageId = userImageId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
+                ", file=" + file +
+                ", userImage='" + userImage + '\'' +
+                ", userImageId='" + userImageId + '\'' +
+                '}';
     }
 }

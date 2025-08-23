@@ -1,5 +1,6 @@
 package com.dustman.controller;
 
+import com.dustman.dto.FileDto;
 import com.dustman.dto.UserDto;
 import com.dustman.service.CloudinaryService;
 import com.dustman.service.UserService;
@@ -9,12 +10,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -63,8 +66,16 @@ public class LoginController {
     }
 
     // User CREATE
-    @PostMapping("/register")
-    public ResponseEntity<?> createUser(@ModelAttribute UserDto userDto) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createUser(@RequestPart("user") UserDto userDto,
+                                        @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+
+        if (file != null && !file.isEmpty()) {
+            FileDto fileDto = cloudinaryService.uploadFile(file);
+            userDto.setUserImage(fileDto.ImageURL());
+            userDto.setUserImageId(fileDto.ImageID());
+        }
+
         ResponseData responseData =  userService.createUser(userDto);
         return ResponseEntity.status(responseData.status()).body(responseData.data());
     }

@@ -16,7 +16,7 @@
           <v-btn text href="#for-shops">For Shops</v-btn>
           <v-btn text href="#testimonials">Testimonials</v-btn>
           <v-btn text href="#contact">Contact</v-btn>
-          <v-btn outlined color="success" class="ml-4" @click="openLogInDialog()">Log In</v-btn>
+          <v-btn outlined color="success" class="ml-4" to="/register">Log In</v-btn>
           <v-btn color="success" class="ml-2" to="/register">Sign Up</v-btn>
         </div>
         <v-app-bar-nav-icon @click="drawer = !drawer" class="d-md-none"></v-app-bar-nav-icon>
@@ -54,34 +54,25 @@
     <!-- Hero Section -->
     <v-main>
       <v-container class="py-16">
-        <v-row class=" flex align-center justify-between" >
+        <v-row class=" flex align-center justify-between">
           <v-col cols="12" md="6" class="pr-md-8">
             <h1 class="text-h2 font-weight-bold mb-4">
               Turn Your <span class="text-success">Waste</span> into <span class="text-success">Wealth</span>
             </h1>
             <p class="text-h6 font-weight-regular mb-6">
-              Dustman connects eco-conscious individuals with local businesses that purchase recyclable materials. 
+              Dustman connects eco-conscious individuals with local businesses that purchase recyclable materials.
               Earn money while helping the planet by selling your recyclables to nearby shops.
             </p>
             <div>
               <v-btn color="success" size="x-large" class="mr-4 mb-4">Sell Your Waste</v-btn>
-              <v-btn 
-                outlined 
-                color="success" 
-                size="x-large" 
-                class="mb-4"
-              >
+              <v-btn outlined color="success" size="x-large" class="mb-4">
                 List Your Shop
               </v-btn>
             </div>
           </v-col>
           <v-col cols="12" md="6">
-            <v-img
-              src="https://images.unsplash.com/photo-1603575448878-868a20723f5d?q=80&w=1000"
-              alt="Recycling Marketplace"
-              max-height="400"
-              class="rounded-lg elevation-5"
-            ></v-img>
+            <v-img src="https://images.unsplash.com/photo-1603575448878-868a20723f5d?q=80&w=1000"
+              alt="Recycling Marketplace" max-height="400" class="rounded-lg elevation-5"></v-img>
           </v-col>
         </v-row>
       </v-container>
@@ -135,7 +126,8 @@
         <v-row>
           <v-col cols="12" md="6">
             <v-card class="overflow-hidden">
-              <div class="py-8 text-center white--text" style="background: linear-gradient(135deg, #2ecc71 0%, #3498db 100%);">
+              <div class="py-8 text-center white--text"
+                style="background: linear-gradient(135deg, #2ecc71 0%, #3498db 100%);">
                 <v-icon size="60" class="mb-4">mdi-account</v-icon>
                 <h3 class="text-h4 font-weight-bold">For Waste Sellers</h3>
                 <p>Individuals & Households</p>
@@ -155,7 +147,8 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-card class="overflow-hidden">
-              <div class="py-8 text-center white--text" style="background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);">
+              <div class="py-8 text-center white--text"
+                style="background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);">
                 <v-icon size="60" class="mb-4">mdi-store</v-icon>
                 <h3 class="text-h4 font-weight-bold">For Shop Owners</h3>
                 <p>Businesses & Recycling Centers</p>
@@ -169,11 +162,7 @@
                     <v-list-item-title>{{ benefit }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
-                <v-btn 
-                  color="primary" 
-                  block 
-                  size="x-large"
-                >
+                <v-btn color="primary" block size="x-large">
                   List Your Shop
                 </v-btn>
               </v-card-text>
@@ -209,24 +198,21 @@
       </v-container>
 
       <!-- CTA Section -->
-     <v-container id="contact" fluid class="py-16" style="background: linear-gradient(135deg, #2ecc71 0%, #3498db 100%);" >
+      <v-container id="contact" fluid class="py-16"
+        style="background: linear-gradient(135deg, #2ecc71 0%, #3498db 100%);">
         <v-row justify="center" class="text-center white--text">
           <v-col cols="12" md="8">
             <h2 class="text-h3 font-weight-bold mb-4">Join the Recycling Revolution</h2>
             <p class="text-h6 mb-8">
-              Whether you have recyclables to sell or you're a business looking to source materials, 
+              Whether you have recyclables to sell or you're a business looking to source materials,
               Dustman makes the process simple, profitable, and eco-friendly.
             </p>
-            <v-btn 
-              color="white" 
-              size="x-large" 
-              class="text-success"
-            >
+            <v-btn color="white" size="x-large" class="text-success">
               Get Started Today
             </v-btn>
           </v-col>
         </v-row>
-     </v-container>
+      </v-container>
 
 
       <!-- Footer -->
@@ -239,7 +225,8 @@
                 <span class="text-h5 font-weight-bold">Dustman</span>
               </div>
               <p class="mb-6">
-                Making recycling profitable and convenient for everyone while helping businesses source quality materials sustainably.
+                Making recycling profitable and convenient for everyone while helping businesses source quality
+                materials sustainably.
               </p>
               <div class="d-flex">
                 <v-btn icon variant="text" color="white" class="mr-2">
@@ -256,7 +243,7 @@
                 </v-btn>
               </div>
             </v-col>
-            
+
             <v-col cols="6" md="2">
               <h3 class="text-h6 font-weight-bold mb-4">Quick Links</h3>
               <v-list class="bg-transparent" density="compact">
@@ -267,7 +254,7 @@
                 <v-list-item href="#testimonials">Testimonials</v-list-item>
               </v-list>
             </v-col>
-            
+
             <v-col cols="6" md="2">
               <h3 class="text-h6 font-weight-bold mb-4">Resources</h3>
               <v-list class="bg-transparent" density="compact">
@@ -278,7 +265,7 @@
                 <v-list-item href="#">Support Center</v-list-item>
               </v-list>
             </v-col>
-            
+
             <v-col cols="12" md="4">
               <h3 class="text-h6 font-weight-bold mb-4">Contact Us</h3>
               <v-list class="bg-transparent" density="compact">
@@ -297,9 +284,9 @@
               </v-list>
             </v-col>
           </v-row>
-          
+
           <v-divider class="my-6 bg-grey"></v-divider>
-          
+
           <div class="text-center text-grey">
             <p>&copy; 2023 Dustman. All rights reserved. Making the planet greener, one transaction at a time.</p>
           </div>
@@ -309,89 +296,114 @@
   </v-app>
 
 
-  <v-dialog v-model="openLogIn" width="900" scroll-strategy="none" >
+  <!-- <v-dialog v-model="openLogIn" width="900" scroll-strategy="none">
     <v-container fluid>
-      <v-col
-            cols="12"
-            class="d-flex flex-column justify-center align-center px-4"
-          >
-            <v-card
-              class="pa-4 rounded-lg elevation-4"
-              max-width="400"
-              width="100%"
-            >
+      <v-col cols="12" class="d-flex flex-column justify-center align-center px-4">
+        <v-card class="pa-4 rounded-lg elevation-4" max-width="400" width="100%">
 
-            <v-card-title class="d-flex">
-              <v-spacer />
-              <v-btn size="small" icon variant="text" @click="openLogIn=false">
+          <v-card-title class="d-flex">
+            <v-spacer />
+            <v-btn size="small" icon variant="text" @click="openLogIn=false">
+              <v-icon color="red">mdi-minus-circle</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title class="d-flex justify-center">
+            <v-avatar color="primary" size="48">
+              <v-icon size="26" color="white">mdi-lock</v-icon>
+            </v-avatar>
+          </v-card-title>
+
+          <v-card-title class="text-center text-h6 font-weight-bold">
+            Welcome Back!
+          </v-card-title>
+          <v-card-subtitle class="text-center mb-3 text-body-2 text-grey-darken-4">
+            Log into your account
+          </v-card-subtitle>
+
+          <v-form ref="formRef" @submit.prevent="submitForm">
+            <v-text-field v-model="email" label="Email" type="email" variant="outlined" density="compact" class="mb-3"
+              :rules="emailRules" required />
+            <v-text-field v-model="password" label="Password" type="password" variant="outlined" density="compact"
+              class="mb-1" :rules="passwordRules" required />
+
+            <v-btn type="submit" block color="green-darken-3" class="mt-1 text-2xl">
+              Log In
+            </v-btn>
+
+          </v-form>
+          <div class="mt-3 text-caption text-center">
+            Don't have an account?
+            <v-btn variant="text" size="small" class="text-primary text-decoration-underline pa-0"
+              @click="openRegDialog()">
+              Sign up
+            </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-container>
+  </v-dialog> -->
+
+  <!-- <v-dialog v-model="openReg" width="600" scroll-strategy="none">
+    <v-container class="">
+      <v-card class="pa-6 rounded-lg">
+
+        <v-card-title align="center">
+          <v-row align="center" justify="space-between">
+            <v-col cols="12" md="10" class="d-flex justify-center">
+              <span class="text-h5 font-weight-bold mb-1 text-green-darken-4">
+                Create Your Dustman Account
+              </span>
+            </v-col>
+
+            <v-col cols="12" md="2" class="d-flex justify-end align-end">
+              <v-btn size="small" icon variant="text" @click="openReg = false">
                 <v-icon color="red">mdi-minus-circle</v-icon>
               </v-btn>
-            </v-card-title>
-              <!-- Lock Icon -->
-              <v-card-title class="d-flex justify-center">
-                <v-avatar color="primary" size="48">
-                  <v-icon size="26" color="white">mdi-lock</v-icon>
-                </v-avatar>
-              </v-card-title>
+            </v-col>
+          </v-row>
 
-              <!-- Welcome Message -->
-              <v-card-title class="text-center text-h6 font-weight-bold">
-                Welcome Back!
-              </v-card-title>
-              <v-card-subtitle class="text-center mb-3 text-body-2 text-grey-darken-4">
-                Log into your account
-              </v-card-subtitle>
+          <v-row>
+            <v-col>
+              <span class="text-center text-subtitle-1 mb-4 text-grey-darken-4">Register to join the Dustman
+                community</span>
+            </v-col>
+          </v-row>
+        </v-card-title>
 
-              <!-- Login Form -->
-              <v-form ref="formRef" @submit.prevent="submitForm">
-                <v-text-field
-                  v-model="email"
-                  label="Email"
-                  type="email"
-                  variant="outlined"
-                  density="compact"
-                  class="mb-3"
-                  :rules="emailRules"
-                  required
-                />
-                <v-text-field
-                  v-model="password"
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                  density="compact"
-                  class="mb-1"
-                  :rules="passwordRules"
-                  required
-                />
-
-                <v-btn
-                  type="submit"
-                  block
-                  color="green-darken-3"
-                  class="mt-1 text-2xl"
-                >
-                  Log In
-                </v-btn>
-        
-              </v-form>
-              <!-- Sign Up -->
-              <div class="mt-3 text-caption text-center">
-                Don't have an account?
-                <v-btn
-                  variant="text"
-                  size="small"
-                  class="text-primary text-decoration-underline pa-0" 
-                  to="/register"
-                >
-                  Sign up
-                </v-btn>
-              </div>
-            </v-card>
-
+        <v-form class="">
+          <v-col cols="12">
+            <v-text-field color="teal" label="Full Name" prepend-inner-icon="mdi-account" variant="outlined"
+              density="compact" required />
           </v-col>
+
+          <v-col cols="12">
+            <v-text-field color="teal" label="Email" prepend-inner-icon="mdi-email" type="email" variant="outlined"
+              density="compact" required />
+          </v-col>
+
+          <v-col cols="12">
+            <v-text-field color="teal" label="Phone Number" prepend-inner-icon="mdi-phone" type="tel" variant="outlined"
+              density="compact" />
+          </v-col>
+
+          <v-col cols="12">
+            <v-text-field color="teal" label="Password" prepend-inner-icon="mdi-lock" type="password" variant="outlined"
+              density="compact" required />
+          </v-col>
+
+          <v-btn type="submit" color="green-darken-3" class="mt-4" block>
+            Create Account
+          </v-btn>
+
+          <div class="mt-4 text-caption text-center">
+            Already have an account?
+            <v-btn variant="text" size="small"
+              class="text-green-darken-4 pa-0 text-decoration-underline cursor-pointer" @click=openLogInDialog()>Sign in</v-btn>
+          </div>
+        </v-form>
+      </v-card>
     </v-container>
-  </v-dialog>
+  </v-dialog> -->
 
 </template>
 
@@ -514,6 +526,8 @@ export default defineComponent({
 
             // LogIN Dialog
             openLogIn: false,
+            // Reg dialog
+            openReg: false,
 
             // validation
             formRef: '',
@@ -530,7 +544,13 @@ export default defineComponent({
 
         // Dialog Open
         const openLogInDialog = ()=> {
+          state.openReg = false
           state.openLogIn = !state.openLogIn
+        }
+
+        const openRegDialog = ()=> {
+          state.openLogIn = false
+          state.openReg = !state.openReg
         }
 
       // Email and Password validation
@@ -559,6 +579,7 @@ export default defineComponent({
             drawer,
             formRef,
             openLogInDialog,
+            openRegDialog,
             emailRules,
             passwordRules,
             submitForm,
