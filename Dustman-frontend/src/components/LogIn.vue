@@ -150,7 +150,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useLoinRegStore } from "@/stores/login/LoginRegStore";
+import { useLoginRegStore } from "@/stores/login/LoginRegStore";
 import { loginType } from "@/stores/login/LoginReg";
 
 export default defineComponent({
@@ -158,7 +158,7 @@ export default defineComponent({
 
     setup() {
         const router = useRouter();
-        const store = useLoinRegStore();
+        const store = useLoginRegStore();
         const formRef = ref();
 
         const state = reactive({

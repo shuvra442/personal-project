@@ -16,7 +16,7 @@
           <v-btn text href="#for-shops">For Shops</v-btn>
           <v-btn text href="#testimonials">Testimonials</v-btn>
           <v-btn text href="#contact">Contact</v-btn>
-          <v-btn outlined color="success" class="ml-4" to="/register">Log In</v-btn>
+          <v-btn outlined color="success" class="ml-4" to="/login">Log In</v-btn>
           <v-btn color="success" class="ml-2" to="/register">Sign Up</v-btn>
         </div>
         <v-app-bar-nav-icon @click="drawer = !drawer" class="d-md-none"></v-app-bar-nav-icon>

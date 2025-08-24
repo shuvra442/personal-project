@@ -100,7 +100,7 @@
 </template>
 
 <script lang="ts">
-import APIstore from "@/stores/login/APIstore";
+import APIstore from "@/stores/payment/APIstore";
 import {
     IndianRupee,
     ShoppingCart,
