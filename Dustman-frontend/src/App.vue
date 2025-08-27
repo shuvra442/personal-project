@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import PageLayout from "@/views/PageLayout.vue";
+import PageLayout from "@/components/common/PageLayout.vue";
 import { useToast } from "vue-toast-notification";
 
 export default defineComponent({

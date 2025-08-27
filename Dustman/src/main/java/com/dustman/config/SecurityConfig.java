@@ -36,7 +36,7 @@ public class SecurityConfig {
                     .cors(cors ->cors.configurationSource(configurationSource()) )
                     .authorizeHttpRequests(authz -> authz
 
-                            .requestMatchers("/login", "/register","/swagger-ui/**","/upload").permitAll()
+                            .requestMatchers("/login", "/register","/swagger-ui/**","/upload","/v3/**").permitAll()
                             .anyRequest().authenticated()
 
                     ).exceptionHandling(ex -> ex

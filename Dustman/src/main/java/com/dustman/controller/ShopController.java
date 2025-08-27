@@ -4,6 +4,7 @@ package com.dustman.controller;
 import com.dustman.model.Shop;
 import com.dustman.service.ShopService;
 import com.dustman.utils.ResponseData;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,5 +51,11 @@ public class ShopController {
     public ResponseEntity<?> delete(@PathVariable int id) {
         ResponseData responseData=shopService.deleteShop(id);
         return ResponseEntity.status(responseData.status()).body(responseData.data());
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getUserById( HttpServletRequest request) {
+        System.out.println("getUserById");
+        return ResponseEntity.status(200).body("responseData.data()");
     }
 }

@@ -16,7 +16,7 @@ import App from './App.vue'
 import router from './router'
 import  'aos/dist/aos.css';
 import AOS from 'aos'
-import { useLoinRegStore } from './stores/login/LoginRegStore'
+import { useLoginRegStore } from './stores/login/LoginRegStore'
 // import { useSampleStore } from './stores/sample'
 
 import vuetify from './config/vuetify'
@@ -43,7 +43,7 @@ app.use(vuetify)
 
 app.use(pinia)
 router.beforeEach((to,from,next)=>{
-  const dataStore=useLoinRegStore();
+  const dataStore=useLoginRegStore();
   if (to.meta.requiresAuth && !dataStore.getIsLogin) {
 
     next({path:"/"})

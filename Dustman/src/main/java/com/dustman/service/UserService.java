@@ -43,13 +43,7 @@ public class UserService {
                 return new ResponseData(409, "Email already exists");
             }
         }
-        try{
-           FileDto fileDto= cloudinaryService.uploadFile(userDto.getFile());
-           user.setUserImage(fileDto.ImageURL());
-           user.setUserImageId(fileDto.ImageID());
-        } catch (IOException e) {
-            return new ResponseData(400, e.getMessage());
-        }
+
         if (user.getRole() == null) {
             user.setRole(Roles.USER);
         }
@@ -58,8 +52,8 @@ public class UserService {
     }
 
 
-    public ResponseData getUserById(int id) {
-        return userRepo.findById(id)
+    public ResponseData getUserById(String email) {
+        return userRepo.findByEmail(email)
                 .map(user -> new ResponseData(200, user))
                 .orElseGet(() -> new ResponseData(400, "User Not Found"));
 
@@ -129,6 +123,8 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setAddress(userDto.getAddress());
+        user.setUserImage(userDto.getUserImage());
+        user.setUserImageId(userDto.getUserImageId());
         user.setCreatedAt(new Date());
 
         return user;

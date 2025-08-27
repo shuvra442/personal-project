@@ -1,41 +1,52 @@
 import { AxiosResponse } from "axios";
 import { defineStore } from 'pinia'
-import type { loginType, regType} from "./LoginReg";
-import { postLoginData } from "@/service/Login/LoginData";
+import type { loginType, regType, User } from "./LoginReg";
+import { postLoginData, postRegData } from "@/service/Login/LoginData";
 
-export const useLoinRegStore = defineStore('loginRegStore',{
+export const useLoginRegStore = defineStore("loginRegStore", {
   state: () => ({
-
-    login: [] as loginType[] | null,
-    reg : [] as regType[] | null,
+    user: null as User | null,
     isLoading: false,
-    isLogin:false
-
+    isLogin: false,
   }),
 
   getters: {
-
-    getLoginData:(state)=> state.login,
-    getIsLogin:(state)=>state.isLogin
-  
+    getUser: (state) => state.user,
+    getIsLogin: (state) => state.isLogin,
+    getRole: (state) => state.user?.role || null,
   },
+
   actions: {
-  
-   async fetchLoginData(payload: loginType) {
-        this.isLoading = true
-        console.log("The data is :: ",payload.email, payload.password)
-        return await postLoginData(payload)
-        .then((response: AxiosResponse)=> {
-            this.isLoading = false
-            this.login = response.data
-            console.log("The data is :::", this.login)
-            this.isLogin=true
-        })
-        .catch((error)=> {
-            console.log("The error is :", error)
-        })
+    async fetchLoginData(payload: loginType) {
+      this.isLoading = true;
+      try {
+        const response: AxiosResponse<User> = await postLoginData(payload);
+        this.user = response.data;
+        this.isLogin = true;
+      } catch (error) {
+        console.error("Login error:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
-    }
+    async fetchRegData(payload: regType) {
+      this.isLoading = true;
+      try {
+        const response: AxiosResponse<User> = await postRegData(payload);
+        this.user = response.data;
+      } catch (error) {
+        console.error("Register error:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    logout() {
+      this.user = null;
+      this.isLogin = false;
+    },
   },
-      persist: true,
-})
+
+  persist: true,
+});

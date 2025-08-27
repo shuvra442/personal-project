@@ -42,13 +42,16 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "shop_id")
+    @JsonIgnore
     private Shop shop;
 
 
     @OneToMany(mappedBy = "userId")
+    @JsonIgnore
     private List<Order> orders ;
 
     @OneToMany(mappedBy = "userId")
+    @JsonIgnore
     private List<Payment> payments ;
 
 

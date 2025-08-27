@@ -4,35 +4,6 @@
             v-if="route.path !== '/login'"
             class="h-12 w-full fixed top-0 z-50 flex flex-row justify-between px-5 bg-transparent bg-opacity-70"
         >
-            <!-- Desktop Navigation -->
-            <div
-                class="hidden md:flex backdrop-blur-3xl rounded-4xl mt-2 w-fit h-full items-center justify-between px-4 navbg"
-            >
-                <router-link
-                    v-for="(item, index) in navItems"
-                    :key="index"
-                    :to="item.label === 'Login' ? '' : item.path"
-                    class="text-gray-700 hover:text-blue-500 transition-colors flex items-center justify-center flex-row"
-                    active-class="text-blue-500 font-medium"
-                    @click.prevent="
-                        item.label === 'Login'
-                            ? showLoginModal()
-                            : item.label === 'Logout'
-                              ? handleLogout()
-                              : null
-                    "
-                >
-                    <div
-                        v-motion
-                        :initial="{ opacity: 0, x: 20 }"
-                        :enter="{ opacity: 1, x: 0 }"
-                        :transition="{ duration: 1, delay: index * 1 }"
-                        class="box h-full w-fit px-2"
-                    >
-                        {{ item.label }}
-                    </div>
-                </router-link>
-            </div>
 
             <!-- Mobile Hamburger -->
             <div class="md:hidden flex items-center">
@@ -191,8 +162,7 @@
 <script lang="ts">
 import {
     defineComponent,
-    ref,
-    reactive,
+    ref, 
     toRefs,
     computed,
     onMounted,
@@ -205,15 +175,18 @@ import {
     ChevronRight,
     CircleHelpIcon,
     CircleUserRound,
+    BookIcon,
+    LayoutDashboard,
+    LucideListOrdered,
     HouseIcon,
     IndianRupeeIcon,
-    ListOrdered,
     Settings,
     UserPen,
     UserPlus,
 } from "lucide-vue-next";
 import { MotionDirective as motion } from "@vueuse/motion";
 import { useToast } from "vue-toast-notification";
+import { useLoginRegStore } from "@/stores/login/LoginRegStore";
 
 export default defineComponent({
     name: "App",
@@ -224,7 +197,10 @@ export default defineComponent({
         AlignLeft,
         ChevronLeft,
         ChevronRight,
+        BookIcon,
         CircleUserRound,
+        LayoutDashboard,
+        LucideListOrdered,
         UserPlus,
         UserPen,
     },
@@ -244,15 +220,33 @@ export default defineComponent({
             { label: "Contact Us", path: "/contact" },
         ]);
 
-        const state = reactive({
-            slideItems: [
+        const loginStore = useLoginRegStore();
+
+        const roleBasedItems: Record<string, any[]> = {
+            USER: [
                 { icon: CircleUserRound, name: "Profile", path: "/profile" },
-                { icon: HouseIcon, name: "Dashboard", path: "/dashboard" },
-                { icon: ListOrdered, name: "Booking", path: "/booking" },
-                { icon: IndianRupeeIcon, name: "Payment", path: "/payment" },
-                { icon: Settings, name: "Setting", path: "/setting" },
+                { icon: HouseIcon, name: "Home", path: "/home" },
+                { icon: BookIcon, name: "Booking", path: "/booking" },
+                { icon: LucideListOrdered, name: "Orders", path: "/orders" },
                 { icon: CircleHelpIcon, name: "Help & Support", path: "/help" },
             ],
+            OWNER: [
+                { icon: CircleUserRound, name: "Profile", path: "/profile" },
+                { icon: LucideListOrdered, name: "Orders", path: "/orders" },
+                { icon: IndianRupeeIcon, name: "Payments", path: "/payments" },
+                { icon: Settings, name: "Settings", path: "/setting" },
+                { icon: CircleHelpIcon, name: "Help & Support", path: "/help" },
+            ],
+            ADMIN: [
+                { icon: CircleUserRound, name: "Profile", path: "/profile" },
+                { icon: LayoutDashboard, name: "User Dashboard", path: "/userDashboard" },
+                { icon: LayoutDashboard, name: "Shop Owner Dashboard", path: "/shpOwnrDhsboard" },
+                { icon: Settings, name: "Settings", path: "/setting" },
+            ],
+        };
+
+        const slideItems = computed(() => {
+            return roleBasedItems[loginStore.getRole as string] || [];
         });
 
         const setActiveItem = (index: number, path: string) => {
@@ -261,13 +255,14 @@ export default defineComponent({
         };
 
         const updateActiveItemFromRoute = () => {
-            const index = state.slideItems.findIndex(
+            const index = slideItems.value.findIndex(
                 (item) => item.path === route.path
             );
             if (index !== -1) {
                 activeItem.value = index;
             }
         };
+
 
         watch(
             () => route.path,
@@ -313,7 +308,6 @@ export default defineComponent({
         };
 
         return {
-            ...toRefs(state),
             route,
             showModal,
             showLoginModal,
@@ -329,6 +323,8 @@ export default defineComponent({
             loaded,
             navItems,
             handleLogout,
+            loginStore,
+            slideItems,
         };
     },
 });
