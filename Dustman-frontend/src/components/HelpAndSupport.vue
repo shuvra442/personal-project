@@ -29,7 +29,7 @@
           <!-- Illustration -->
           <div class="absolute right-12 top-6 hidden md:block">
             <img
-              src="C:\Users\dalai\OneDrive\Desktop\DustMan\personal-project\Dustman-frontend\src\assets\images-removebg-preview.png"
+              src="/public/HelpAndSupport.png"
               alt="person"
               class="w-36"
             />
