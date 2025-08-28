@@ -510,9 +510,15 @@ export default defineComponent({
                                     <td
                                         class="px-4 py-4 whitespace-nowrap text-sm text-gray-500"
                                     >
-                                        {{
-                                            formatDateTime(order.completedTime)
-                                        }}
+                                        <p v-if="order.completedTime">
+                                            Completed:
+                                            {{
+                                                formatDateTime(
+                                                    order.completedTime
+                                                )
+                                            }}
+                                        </p>
+                                        <p v-else>Not yet completed</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -650,38 +656,22 @@ function showNotification(message: string, type: string) {
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 
-interface Order {
-    id: string;
-    shopName: string;
-    date: Date;
-    weight: number;
-    status: "Pending" | "Delivered" | "Processing";
+interface Customer {
+    name: string;
+    address: string;
 }
 
-// sample data
-const sampleOrders: Order[] = [
-    {
-        id: "order001",
-        shopName: "Grocery Mart",
-        date: new Date("2025-06-01T10:00:00Z"),
-        weight: 20,
-        status: "Pending",
-    },
-    {
-        id: "order002",
-        shopName: "Fresh Farm",
-        date: new Date("2025-06-15T14:30:00Z"),
-        weight: 35,
-        status: "Delivered",
-    },
-    {
-        id: "order003",
-        shopName: "Dairy Hub",
-        date: new Date("2025-06-20T09:00:00Z"),
-        weight: 18,
-        status: "Processing", // <-- changed to match your union type
-    },
-];
+interface Order {
+    id: string;
+    customer: Customer;
+    garbageType: string;
+    weight: number;
+    status: "Pending" | "Delivered" | "Processing";
+    requestedTime: Date;
+    estimatedValue?: number;
+    completedTime?: Date;
+    finalValue?: number;
+}
 
 // tabs
 const activeTab = ref<"Pending" | "Processing" | "Delivered">("Pending");
@@ -691,16 +681,57 @@ const summaryData = reactive({
     pendingRequests: 0,
     todaysGarbage: 0,
     completedOrders: 0,
-    weeklyCompleted: 12,
-    totalEarnings: 12500,
+    weeklyCompleted: 18,
+    totalEarnings: 45200,
 });
 
-// grouped orders
+// orders grouped by status
 const orders = reactive({
     Pending: [] as Order[],
     Processing: [] as Order[],
     Delivered: [] as Order[],
 });
+
+// 🌟 Proper mock data
+const sampleOrders: Order[] = [
+    {
+        id: "ORD-101",
+        customer: { name: "Amit Sharma", address: "Sector 15, Gandhinagar" },
+        garbageType: "Plastic",
+        weight: 12,
+        status: "Pending",
+        requestedTime: new Date("2025-08-25T10:30:00"),
+    },
+    {
+        id: "ORD-102",
+        customer: { name: "Neha Gupta", address: "Sector 12, Gandhinagar" },
+        garbageType: "Electronics",
+        weight: 5,
+        status: "Processing",
+        requestedTime: new Date("2025-08-26T14:00:00"),
+        estimatedValue: 350,
+    },
+    {
+        id: "ORD-103",
+        customer: { name: "Sanjay Mehta", address: "Sector 9, Gandhinagar" },
+        garbageType: "Paper",
+        weight: 20,
+        status: "Delivered",
+        requestedTime: new Date("2025-08-24T11:45:00"),
+        completedTime: new Date("2025-08-25T16:45:00"),
+        finalValue: 300,
+    },
+    {
+        id: "ORD-104",
+        customer: { name: "Priya Patel", address: "Sector 21, Ahmedabad" },
+        garbageType: "Metal",
+        weight: 15,
+        status: "Delivered",
+        requestedTime: new Date("2025-08-23T09:15:00"),
+        completedTime: new Date("2025-08-23T12:30:00"),
+        finalValue: 500,
+    },
+];
 
 // initialize orders from sampleOrders
 sampleOrders.forEach((order) => {
@@ -713,12 +744,13 @@ sampleOrders.forEach((order) => {
         orders.Delivered.push(order);
         summaryData.completedOrders++;
         summaryData.todaysGarbage += order.weight;
+        if (order.finalValue) {
+            summaryData.totalEarnings += order.finalValue;
+        }
     }
 });
 
-// ======================
-// Helper methods
-// ======================
+// helpers
 function formatCurrency(amount: number): string {
     return "₹" + amount.toLocaleString("en-IN");
 }
@@ -740,11 +772,13 @@ function formatTime(date: Date): string {
     });
 }
 
+// actions
 function acceptOrder(order: Order) {
     const index = orders.Pending.findIndex((o) => o.id === order.id);
     if (index !== -1) {
         orders.Pending.splice(index, 1);
         order.status = "Processing";
+        order.estimatedValue = order.weight * 20; // e.g. ₹20/kg
         orders.Processing.push(order);
         summaryData.pendingRequests--;
         showNotification("Order moved to Processing!", "success");
@@ -760,13 +794,13 @@ function rejectOrder(order: Order) {
     }
 }
 
-function markAsReceived(order: any) {
+function markAsReceived(order: Order) {
     const index = orders.Processing.findIndex((o) => o.id === order.id);
     if (index !== -1) {
         orders.Processing.splice(index, 1);
         order.status = "Delivered";
         order.completedTime = new Date();
-        order.finalValue = Math.round(order.weight * 10); // or your own logic
+        order.finalValue = Math.round(order.weight * 18); // final price after deduction
         orders.Delivered.push(order);
 
         summaryData.completedOrders++;
