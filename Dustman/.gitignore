@@ -2,6 +2,9 @@ logs
 .vscode
 .idea
 .qodo
+<<<<<<< HEAD
 .env
 src/main/resources/application.properties
+=======
+>>>>>>> 13fecdc88e1edadd2aa46d53a5f20571208f5392
 controller.md
