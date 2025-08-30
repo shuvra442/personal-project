@@ -11,75 +11,118 @@ import Settings from '@/components/Settings.vue'
 import ShopOwnerDahsboard from '@/components/ShopOwnerDahsboard.vue'
 import UserDashboard from '@/components/UserDashboard.vue'
 import HelpAndSupport from '@/components/HelpAndSupport.vue'
+import ShopDetails from '@/components/product/ShopDetails.vue'
+import shopContact from '@/components/product/shopContact.vue'
+import { useLoginRegStore } from '@/stores/login/LoginRegStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-
     {
-      path: '/login',
-      name: 'LogIn',
+      path: "/login",
+      name: "LogIn",
       component: LogIn,
-    
     },
     {
-      path:'/register',
-      name: 'Register',
+      path: "/oauth2/callback",
+      component: () => import("@/components/OAuth2Callback.vue"),
+    },
+    {
+      path: "/register",
+      name: "Register",
       component: Register,
     },
     {
-      path: '/',
-      name: 'LandingPage',
+      path: "/",
+      name: "LandingPage",
       component: LandinPage,
     },
     {
-      path: '/home',
-      name: 'HomePage',
+      path: "/home",
+      name: "HomePage",
       component: HomePage,
+      meta: { requiresAuth: true },
     },
-  
+
     {
-      path: '/payments',
-      name: 'payment',
+      path: "/payments",
+      name: "payment",
       component: Payment,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/booking',
-      name: 'Bookings',
+      path: "/booking",
+      name: "Bookings",
       component: Bookings,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/orders',
-      name: 'Orders',
+      path: "/orders",
+      name: "Orders",
       component: Orders,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/profile',
-      name: 'Profiles',
+      path: "/profile",
+      name: "Profiles",
       component: Profiles,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/setting',
-      name: 'Settings',
+      path: "/setting",
+      name: "Settings",
       component: Settings,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/shpOwnrDhsboard',
-      name: 'ShopOwnerDahsboard',
+      path: "/shpOwnrDhsboard",
+      name: "ShopOwnerDahsboard",
       component: ShopOwnerDahsboard,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/userDashboard',
-      name: 'UserDashboard',
+      path: "/userDashboard",
+      name: "UserDashboard",
       component: UserDashboard,
+      meta: { requiresAuth: true },
     },
     {
-      path: '/help',
-      name: 'HelpAndSupport',
+      path: "/help",
+      name: "HelpAndSupport",
       component: HelpAndSupport,
+    },
+    {
+      path: '/shopDetails',
+      name: 'ShopDetails',
+      component: ShopDetails,
+    },
+    {
+      path: '/shopContact',
+      name: 'ShopContact',
+      component: shopContact,
     },
 
   ],
-})
+});
+
+router.beforeEach((to, from, next) => {
+  const store = useLoginRegStore();
+
+  // Skip check for login, register, oauth2/callback, landing
+  if (
+    to.path === "/login" ||
+    to.path === "/register" ||
+    to.path === "/oauth2/callback" ||
+    to.path === "/"
+  ) {
+    return next();
+  }
+
+  // If route requires auth but no token
+  if (to.meta.requiresAuth && !store.getIsLogin) {
+    return next("/login");
+  }
+  next();
+});
 
 export default router

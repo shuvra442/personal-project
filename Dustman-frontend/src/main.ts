@@ -34,7 +34,7 @@ import "@mdi/font/css/materialdesignicons.css"
 
 const app = createApp(App)
 const pinia = createPinia()
-app.use(createPinia())
+// app.use(createPinia())
 app.use(router)
 app.use(VueToast)
 app.use(MotionPlugin)

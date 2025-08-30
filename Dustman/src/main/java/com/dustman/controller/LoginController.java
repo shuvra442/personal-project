@@ -40,7 +40,8 @@ public class LoginController {
         System.out.println("userDto=>"+userDto.toString());
         try{
             UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getEmail());
-            logger.info("User Email -->", userDetails);
+            logger.info("User Email -->{}", userDetails);
+            String token = jwtCreate.generateToken(userDetails);
 
             ResponseData responseData = userService.login(userDetails,userDto);
 
@@ -55,6 +56,13 @@ public class LoginController {
                 System.out.println("the cookie is ::-->" + responseCookie);
                 logger.info("the cookie is ::-->", responseCookie);
                 httpServletResponse.setHeader("Set-Cookie", responseCookie.toString());
+
+                return ResponseEntity.ok().body(
+                        java.util.Map.of(
+                                "token", token,
+                                "user", responseData.data()
+                        )
+                );
             }
 
             return ResponseEntity.status(responseData.status()).body(responseData.data());
@@ -62,7 +70,6 @@ public class LoginController {
             logger.error("Error in loginController -->", e.getMessage());
             return ResponseEntity.status(400).body("User Not Found");
         }
-
     }
 
     // User CREATE
@@ -78,6 +85,21 @@ public class LoginController {
 
         ResponseData responseData =  userService.createUser(userDto);
         return ResponseEntity.status(responseData.status()).body(responseData.data());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // Clear cookie by setting maxAge = 0
+        ResponseCookie deleteCookie = ResponseCookie.from("AccessToken", "")
+                .path("/")
+                .httpOnly(true)
+                .sameSite("Lax")
+                .maxAge(0) // expire immediately
+                .build();
+
+        response.setHeader("Set-Cookie", deleteCookie.toString());
+
+        return ResponseEntity.ok("Logged out successfully");
     }
 
     @PostMapping("/upload")

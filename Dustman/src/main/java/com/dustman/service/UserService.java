@@ -5,6 +5,7 @@ import com.dustman.dto.UserDto;
 import com.dustman.model.User;
 import com.dustman.repository.UserRepo;
 import com.dustman.utils.ResponseData;
+import com.dustman.utils.enums.AuthProvider;
 import com.dustman.utils.enums.Roles;
 import com.dustman.utils.jwt.JWTCreate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,11 @@ public class UserService {
         if (user.getRole() == null) {
             user.setRole(Roles.USER);
         }
+
+        if (user.getProvider() == null) {
+            user.setProvider(AuthProvider.LOCAL);
+        }
+
         User userCreated = userRepo.save(user);
         return new ResponseData(200, userCreated);
     }

@@ -23,3 +23,8 @@ export interface User {
   role: "USER" | "OWNER" | "ADMIN";
   createdAt: string;
 }
+
+export interface LoginResponse {
+  token: string;
+  user: User;
+}

@@ -2,6 +2,7 @@ package com.dustman.config;
 
 import com.dustman.model.User;
 import com.dustman.repository.UserRepo;
+import com.dustman.utils.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         User user = optionalUser.get();
+
+//        Roles role = (user.getRole() != null) ? user.getRole() : Roles.USER;
+//        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.name());
 
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
 

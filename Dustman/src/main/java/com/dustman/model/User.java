@@ -1,5 +1,6 @@
 package com.dustman.model;
 
+import com.dustman.utils.enums.AuthProvider;
 import com.dustman.utils.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -32,6 +33,10 @@ public class User {
 
     private String userImageId;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
     @Enumerated(EnumType.STRING)
     @Column()
     private Roles role;
@@ -57,20 +62,20 @@ public class User {
 
     public User() {}
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -121,6 +126,14 @@ public class User {
         this.userImageId = userImageId;
     }
 
+    public AuthProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
     public Roles getRole() {
         return role;
     }
@@ -161,19 +174,24 @@ public class User {
         this.payments = payments;
     }
 
-    public User(int userId, String email, Long phoneNo, String password, String address, String userImage, String userImageId, Roles role, Date createdAt, Shop shop, List<Order> orders, List<Payment> payments) {
-        this.userId = userId;
-        this.email = email;
-        this.phoneNo = phoneNo;
-        this.password = password;
-        this.address = address;
-        this.userImage = userImage;
-        this.userImageId = userImageId;
-        this.role = role;
-        this.createdAt = createdAt;
-        this.shop = shop;
-        this.orders = orders;
-        this.payments = payments;
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNo=" + phoneNo +
+                ", password='" + password + '\'' +
+                ", address='" + address + '\'' +
+                ", userImage='" + userImage + '\'' +
+                ", userImageId='" + userImageId + '\'' +
+                ", provider=" + provider +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                ", shop=" + shop +
+                ", orders=" + orders +
+                ", payments=" + payments +
+                '}';
     }
 }
 

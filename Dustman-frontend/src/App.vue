@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full relative scroll-smooth">
+    <div class="h-full relative scroll-smooth w-full">
         <PageLayout />
     </div>
 </template>

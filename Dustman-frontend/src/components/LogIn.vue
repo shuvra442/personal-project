@@ -113,6 +113,7 @@
                                         color="red"
                                         prepend-icon="mdi-google"
                                         class="text-caption"
+                                        @click="loginWithGoogle"
                                     >
                                         Google
                                     </v-btn>
@@ -168,13 +169,39 @@ export default defineComponent({
             loading: false,
         });
 
+        // const handleLogin = async () => {
+        //     const form = formRef.value;
+        //     const isValid = await form?.validate();
+
+        //     if (!isValid) {
+        //         console.warn("Form validation failed");
+        //         console.log("isValid=>>", form);
+        //         return;
+        //     }
+
+        //     state.loading = true;
+
+        //     const loginPayload: loginType = {
+        //         email: state.email,
+        //         password: state.password,
+        //     };
+
+        //     console.log("Logging in as:", loginPayload.email);
+
+        //     await store.fetchLoginData(loginPayload);
+        //     setTimeout(() => {
+        //         // store.fetchLoginData(loginPayload);
+        //         state.loading = false;
+        //         router.push("/home");
+        //     }, 1000);
+        // };
+
         const handleLogin = async () => {
             const form = formRef.value;
             const isValid = await form?.validate();
 
             if (!isValid) {
                 console.warn("Form validation failed");
-                console.log("isValid=>>", form);
                 return;
             }
 
@@ -185,20 +212,26 @@ export default defineComponent({
                 password: state.password,
             };
 
-            console.log("Logging in as:", loginPayload.email);
+            await store.fetchLoginData(loginPayload);
 
-            store.fetchLoginData(loginPayload);
-            setTimeout(() => {
-                // store.fetchLoginData(loginPayload);
-                state.loading = false;
+            state.loading = false;
+            if (store.isLogin) {
                 router.push("/home");
-            }, 1000);
+            }
         };
+
+        const loginWithGoogle = () => {
+            // Redirect user to backend OAuth2 entrypoint
+            window.location.href = "http://localhost:9000/oauth2/authorization/google";
+        };
+
+
 
         return {
             ...toRefs(state),
             formRef,
             handleLogin,
+            loginWithGoogle,
         };
     },
 });

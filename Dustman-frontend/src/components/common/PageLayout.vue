@@ -103,7 +103,7 @@
                                     ? 'bg-[#A3C7E1] border-l-4 rounded-l-lg border-[#2e5774]'
                                     : '',
                             ]"
-                            @click="setActiveItem(index, item.path)"
+                            @click="setActiveItem(index, item)"
                             v-motion
                             :initial="{ opacity: 0, y: 60 }"
                             :enter="{ opacity: 1, y: 0 }"
@@ -163,7 +163,6 @@
 import {
     defineComponent,
     ref, 
-    toRefs,
     computed,
     onMounted,
     watch,
@@ -229,6 +228,7 @@ export default defineComponent({
                 { icon: BookIcon, name: "Booking", path: "/booking" },
                 { icon: LucideListOrdered, name: "Orders", path: "/orders" },
                 { icon: CircleHelpIcon, name: "Help & Support", path: "/help" },
+                { icon: UserPlus, name: "Logout", logout: true },
             ],
             OWNER: [
                 { icon: CircleUserRound, name: "Profile", path: "/profile" },
@@ -236,12 +236,14 @@ export default defineComponent({
                 { icon: IndianRupeeIcon, name: "Payments", path: "/payments" },
                 { icon: Settings, name: "Settings", path: "/setting" },
                 { icon: CircleHelpIcon, name: "Help & Support", path: "/help" },
+                { icon: UserPlus, name: "Logout", logout: true },
             ],
             ADMIN: [
                 { icon: CircleUserRound, name: "Profile", path: "/profile" },
                 { icon: LayoutDashboard, name: "User Dashboard", path: "/userDashboard" },
                 { icon: LayoutDashboard, name: "Shop Owner Dashboard", path: "/shpOwnrDhsboard" },
                 { icon: Settings, name: "Settings", path: "/setting" },
+                { icon: UserPlus, name: "Logout", logout: true },
             ],
         };
 
@@ -249,9 +251,19 @@ export default defineComponent({
             return roleBasedItems[loginStore.getRole as string] || [];
         });
 
-        const setActiveItem = (index: number, path: string) => {
+        const setActiveItem = async (index: number, path: any) => {
             activeItem.value = index;
-            router.push(path);
+            if (path.logout) {
+               await handleLogout(); // call logout
+            } else {
+                router.push(path);
+            }
+        };
+
+        const handleLogout = async () => {
+            await loginStore.logout(); // clear backend + reset store
+            toast.success("Logout successfully");
+            router.push("/login"); // redirect to login page
         };
 
         const updateActiveItemFromRoute = () => {
@@ -302,10 +314,6 @@ export default defineComponent({
 
         const loaded = ref(false);
         const toast = useToast();
-        const handleLogout = () => {
-            toast.success("Logout sucessfully");
-            router.push("/");
-        };
 
         return {
             route,

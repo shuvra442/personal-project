@@ -2,3 +2,6 @@ logs
 .vscode
 .idea
 .qodo
+.env
+src/main/resources/application.properties
+controller.md

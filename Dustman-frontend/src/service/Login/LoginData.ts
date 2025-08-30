@@ -1,8 +1,8 @@
-import { loginType, regType, User } from "@/stores/login/LoginReg";
+import { LoginResponse, loginType, regType, User } from "@/stores/login/LoginReg";
 import { AxiosResponse } from "axios";
 import apiClient from "../../config/axios";
 
-export function postLoginData(payload: loginType): Promise<AxiosResponse<User>> {
+export function postLoginData(payload: loginType): Promise<AxiosResponse<LoginResponse>> {
     return apiClient.post(`/login`, payload);
 }
 
