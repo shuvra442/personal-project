@@ -11,6 +11,8 @@ import Settings from '@/components/Settings.vue'
 import ShopOwnerDahsboard from '@/components/ShopOwnerDahsboard.vue'
 import UserDashboard from '@/components/UserDashboard.vue'
 import HelpAndSupport from '@/components/HelpAndSupport.vue'
+import ShopDetails from '@/components/product/ShopDetails.vue'
+import shopContact from '@/components/product/shopContact.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,6 +79,16 @@ const router = createRouter({
       path: '/help',
       name: 'HelpAndSupport',
       component: HelpAndSupport,
+    },
+    {
+      path: '/shopDetails',
+      name: 'ShopDetails',
+      component: ShopDetails,
+    },
+    {
+      path: '/shopContact',
+      name: 'ShopContact',
+      component: shopContact,
     },
 
   ],

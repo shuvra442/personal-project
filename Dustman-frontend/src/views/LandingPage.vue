@@ -207,7 +207,7 @@
               Whether you have recyclables to sell or you're a business looking to source materials,
               Dustman makes the process simple, profitable, and eco-friendly.
             </p>
-            <v-btn color="white" size="x-large" class="text-success">
+            <v-btn color="white" size="x-large" class="text-success" to="/register">
               Get Started Today
             </v-btn>
           </v-col>

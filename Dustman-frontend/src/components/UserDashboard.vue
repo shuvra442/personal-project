@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen w-full pt-12 px-5 pb-10 bg-[#E8F5E9]">
+    <div class="min-h-screen w-full pt-12 px-5 pb-10">
         <!-- Welcome Header -->
         <div class="text-center md:text-left space-y-1 mb-6">
             <h1 class="text-3xl font-bold text-gray-800">Welcome Back, User</h1>
