@@ -12,6 +12,9 @@ import ShopOwnerDahsboard from '@/components/ShopOwnerDahsboard.vue'
 import UserDashboard from '@/components/UserDashboard.vue'
 import HelpAndSupport from '@/components/HelpAndSupport.vue'
 import { useLoginRegStore } from '@/stores/login/LoginRegStore'
+import shopContact from  '@/components/product/ShopContact.vue'
+import ShopDetails from '@/components/product/ShopDetails.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

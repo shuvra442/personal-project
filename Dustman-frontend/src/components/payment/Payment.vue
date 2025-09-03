@@ -1,245 +1,565 @@
 <template>
-    <div class="h-full w-full flex flex-col md:flex-row p-4">
-        <!-- Left Section - Image -->
-        <div class="md:w-1/2 flex items-center justify-center p-6">
-            <img
-                :src="data.shopImage"
-                alt="shop image"
-                class="rounded-xl shadow-lg w-64 h-64 object-cover"
-            />
-        </div>
+  <v-container fluid class="pa-6 bg-grey-lighten-4">
+    <!-- HEADER -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-weight-bold text-grey-darken-3 mb-2">
+        Pickup Details
+      </h1>
+      <p class="text-grey-darken-1">
+        Please provide your information for collect your waste item
+      </p>
+    </div>
 
-        <!-- Right Section - Details -->
-        <div
-            class="md:w-1/2 w-full h-full flex items-center p-6 justify-center flex-col gap-5 rounded-xl shadow-lg"
-        >
-            <!-- Shop Name -->
-            <h2 class="text-3xl font-bold text-gray-800">
-                {{ data.shopName }}
+    <v-row align="start">
+      <!-- ================= LEFT SECTION ================= -->
+      <v-col cols="12" md="8">
+        <v-card class="pa-8 rounded-xl" max-height="90vh" style="overflow-y: auto;">
+          <!-- 1. Select Pickup Address -->
+          <div class="border-b border-grey-lighten-2 pb-6 mb-6">
+            <h2 class="text-xl font-weight-semibold text-grey-darken-3 mb-4 d-flex align-center">
+              <span
+                class="bg-blue-lighten-5 text-blue-darken-2 rounded-circle d-inline-flex align-center justify-center mr-3"
+                style="width: 32px; height: 32px; font-size: 14px; font-weight: bold;"
+              >
+                1
+              </span>
+              Select Pickup Address
             </h2>
 
-            <!-- Online Status -->
-            <div class="flex items-center gap-2">
-                <span
-                    v-if="data.onlineStatus"
-                    class="bg-green-500 text-white px-3 py-1 rounded-full text-sm"
-                >
-                    Online
-                </span>
-                <span
-                    v-else
-                    class="bg-gray-400 text-white px-3 py-1 rounded-full text-sm"
-                >
-                    Offline
-                </span>
+            <!-- saved addresses -->
+            <v-radio-group
+              v-if="savedAddresses.length > 0"
+              v-model="selectedAddress"
+              column
+              class="mt-4"
+            >
+              <v-radio
+                v-for="(addr, index) in savedAddresses"
+                :key="index"
+                :value="index"
+                class="mb-3"
+              >
+                <template #label>
+                  <div class="ml-2 d-flex justify-space-between align-center">
+                    <div>
+                      <!-- Name + Phone -->
+                      <div class="font-weight-bold">
+                        {{ addr.name }} | {{ addr.phone }}
+                      </div>
+                      <!-- Address -->
+                      <div class="text-caption text-grey-darken-1">
+                        {{ addr.address }}
+                        <span v-if="addr.locality">, {{ addr.locality }}</span>,
+                        {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}
+                      </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="ml-4 d-flex align-center">
+                      <v-btn
+                        icon
+                        size="small"
+                        variant="text"
+                        color="blue-darken-2"
+                        @click.stop="editAddress(index)"
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        size="small"
+                        variant="text"
+                        color="red-darken-2"
+                        @click.stop="deleteAddress(index)"
+                      >
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </div>
+                  </div>
+                </template>
+              </v-radio>
+            </v-radio-group>
+
+            <!-- no saved addresses -->
+            <div v-else class="text-center py-10">
+              <v-icon size="64" color="blue-darken-2">mdi-home-outline</v-icon>
+              <p class="mt-4 text-grey-darken-2 text-subtitle-1">
+                You don’t have any saved addresses yet.
+              </p>
+              <p class="text-caption text-grey-darken-1 mb-4">
+                Add one so we can collect your waste items.
+              </p>
+              <v-btn
+                color="blue-darken-2"
+                class="mt-2 text-none font-weight-bold px-6 py-3"
+                @click="showNewForm = true"
+              >
+                <v-icon class="mr-2" icon="mdi-plus" /> Add New Address
+              </v-btn>
             </div>
+          </div>
 
-            <!-- Shop Info -->
-            <div class="space-y-1 text-gray-600">
-                <p>{{ data.shopAdd }}</p>
-                <p class="text-blue-500 underline">{{ data.shopEmail }}</p>
-            </div>
+          <!-- 2. Schedule Pickup -->
+          <div class="border-b border-grey-lighten-2 pb-6 mb-6">
+            <h2 class="text-xl font-weight-semibold text-grey-darken-3 mb-4 d-flex align-center">
+              <span
+                class="bg-blue-lighten-5 text-blue-darken-2 rounded-circle d-inline-flex align-center justify-center mr-3"
+                style="width: 32px; height: 32px; font-size: 14px; font-weight: bold;"
+              >
+                2
+              </span>
+              Schedule a Pickup
+            </h2>
 
-            <!-- Garbage Info -->
-            <div class="text-lg text-gray-700 space-y-1">
-                <p>
-                    Garbage Available:
-                    <span class="font-semibold text-black"
-                        >{{ data.garbageAmt }} KG</span
-                    >
-                </p>
-                <div class="flex items-center gap-1 font-medium">
-                    <IndianRupee :size="18" class="text-green-700" />
-                    <span class="text-black">{{ data.garbagePrice }}/KG</span>
-                </div>
-            </div>
+            <v-form>
+              <v-select
+                v-model="deliveryTime"
+                :items="deliveryTimes"
+                label="Preferred Pickup Time"
+                variant="outlined"
+                class="rounded-lg mt-2"
+                hide-details
+              />
 
-            <!-- Quantity Control -->
-            <div class="flex items-center gap-3 mt-2">
-                <button
-                    @click="decrement"
-                    class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+              <v-textarea
+                v-model="instructions"
+                label="Special Instructions (Optional)"
+                variant="outlined"
+                class="rounded-lg mt-4"
+                rows="1"
+                hide-details
+              />
+
+              <v-checkbox
+                v-model="notifications"
+                label="Send me SMS  about my pickup"
+                color="blue-darken-2"
+                class="mt-4"
+                hide-details
+              />
+            </v-form>
+          </div>
+
+          <!-- Add New Address toggle -->
+          <v-btn
+            v-if="savedAddresses.length > 0"
+            block
+            color="blue-darken-2"
+            class="mt-4 py-3 text-none font-weight-bold"
+            variant="tonal"
+            @click="showNewForm = !showNewForm"
+          >
+            <v-icon icon="mdi-plus" class="mr-2" />
+            {{ showNewForm ? "Cancel New Address" : "Add New Address" }}
+          </v-btn>
+
+          <!-- Add New Address Form -->
+          <v-expand-transition>
+            <div v-if="showNewForm" class="mt-8">
+              <!-- Personal Info -->
+              <div class="border-b border-grey-lighten-2 pb-6 mb-6">
+                <h2 class="text-xl font-weight-semibold text-grey-darken-3 mb-4 d-flex align-center">
+                  <span
+                    class="bg-blue-lighten-5 text-blue-darken-2 rounded-circle d-inline-flex align-center justify-center mr-3"
+                    style="width: 32px; height: 32px; font-size: 14px; font-weight: bold;"
+                  >
+                    3
+                  </span>
+                  Personal Information
+                </h2>
+
+                <v-row class="mt-2">
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="name"
+                      label="Name *"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="phone"
+                      label="10-digit mobile number *"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+
+                <v-row class="mt-2">
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="email"
+                      label="Email"
+                      type="email"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+              </div>
+
+              <!-- Pickup Address -->
+              <div class="pb-6">
+                <h2 class="text-xl font-weight-semibold text-grey-darken-3 mb-4 d-flex align-center">
+                  <span
+                    class="bg-blue-lighten-5 text-blue-darken-2 rounded-circle d-inline-flex align-center justify-center mr-3"
+                    style="width: 32px; height: 32px; font-size: 14px; font-weight: bold;"
+                  >
+                    4
+                  </span>
+                  Pickup Address
+                </h2>
+
+                <!-- Use My Current Location Button -->
+                <v-btn
+                  color="blue-darken-2"
+                  class="mb-4 text-none font-weight-bold"
+                  @click="useCurrentLocation"
+                  :loading="loadingLocation"
                 >
-                    <Minus class="text-black" />
-                </button>
+                  <v-icon class="mr-2">mdi-crosshairs-gps</v-icon>
+                  Use my current location
+                </v-btn>
 
-                <input
-                    class="w-16 text-center border border-gray-400 rounded py-1 px-2 text-sm"
-                    v-model.number="quantity"
-                    type="number"
-                    min="1"
-                    :max="parseInt(data.garbageAmt)"
-                    @change="validateQuantity"
+                <v-row class="mt-2">
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="pincode"
+                      label="Pincode *"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="locality"
+                      label="Locality *"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+
+                <v-text-field
+                  v-model="address"
+                  label="Address (Area and Street) *"
+                  variant="outlined"
+                  class="rounded-lg mt-2"
+                  hide-details
                 />
 
-                <button @click="increment">
-                    <Plus class="text-black" />
-                </button>
+                <v-row class="mt-2">
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="city"
+                      label="City/District/Town *"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      v-model="selectedState"
+                      :items="states"
+                      label="State *"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+
+                <v-row class="mt-2">
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="landmark"
+                      label="Landmark (Optional)"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="altPhone"
+                      label="Alternate Phone (Optional)"
+                      variant="outlined"
+                      class="rounded-lg"
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-center mt-6">
+                  <v-btn
+                    color="blue-darken-2"
+                    class="mr-3 py-3 text-none font-weight-bold px-6"
+                    @click="saveAddress"
+                  >
+                    Confirm Pickup Details
+                  </v-btn>
+
+                  <v-btn
+                    :color="isFormDirty ? 'red-darken-2' : 'grey'"
+                    :variant="isFormDirty ? 'flat' : 'tonal'"
+                    class="py-3 text-none font-weight-bold px-6"
+                    :disabled="!isFormDirty"
+                    @click="resetForm"
+                  >
+                    Reset
+                  </v-btn>
+                </div>
+              </div>
             </div>
+          </v-expand-transition>
+        </v-card>
+      </v-col>
 
-            <!-- Price Display -->
-            <div class="text-xl font-bold text-gray-900">
-                Total: ₹ {{ price }}
-            </div>
+      <!-- ================= RIGHT SECTION ================= -->
+      <v-col cols="12" md="4">
+        <v-card class="pa-4 rounded-lg mb-4">
+          <h3 class="text-h6 font-weight-bold mb-4">💰 Price Details</h3>
 
-            <!-- Order Button -->
-            <v-btn @click="makePayment" :disabled="loading">
-                <template v-if="loading">
-                    <Loader class="animate-spin text-black"
-                /></template>
-                <template v-else class="flex gap-2">
-                    <ShoppingCart class="w-5 h-5" /> <span>Place Order</span>
-                </template>
-            </v-btn>
+          <div class="d-flex justify-space-between mb-2 mr-2">
+            <span>Quantity :</span>
+            <span>{{ quantity }} Kg</span>
+          </div>
 
-            <!-- <v-btn @click="makePayment" :disabled="loading" v-if="loading">
-                <ShoppingCart class="w-5 h-5" /> Place Order
-            </v-btn> -->
+          <div class="d-flex justify-space-between mb-2 mr-2">
+            <span>Subtotal :</span>
+            <span>₹{{ subtotal }}</span>
+          </div>
+
+          <div class="d-flex justify-space-between mb-2 mr-2">
+            <span>Service Fee :</span>
+            <span>₹{{ serviceFee }}</span>
+          </div>
+
+          <v-divider class="my-2" />
+
+          <div class="d-flex justify-space-between font-weight-bold mb-2">
+            <span>Total Amount:</span>
+            <span class="text-success">₹{{ totalAmount }}</span>
+          </div>
+        </v-card>
+
+        <!-- Pay Button -->
+        <div class="sticky bottom-0 bg-grey-lighten-4 pb-2">
+          <v-btn
+            block
+            color="success"
+            class="py-4 text-none font-weight-bold text-h6"
+            :disabled="selectedAddress === null"
+          >
+            <v-icon left>mdi-lock</v-icon>
+            PAY ₹{{ totalAmount }} SECURELY
+          </v-btn>
         </div>
-    </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
-import APIstore from "@/stores/payment/APIstore";
-import {
-    IndianRupee,
-    ShoppingCart,
-    Plus,
-    Minus,
-    Loader,
-} from "lucide-vue-next";
-import { computed, defineComponent, reactive, ref, toRefs } from "vue";
-
-interface Payment {
-    amount: number;
-    items: string;
-}
+import { defineComponent, reactive, toRefs, computed } from "vue";
 
 export default defineComponent({
-    name: "App",
-    components: {
-        IndianRupee,
-        ShoppingCart,
-        Plus,
-        Minus,
-        Loader,
-    },
-    setup() {
-        const state = reactive({
-            data: {
-                shopImage:
-                    "https://imgs.search.brave.com/sWtfHNeytLqNDHoYR_2uthRTZ-1Kr8skdmwf11JF5EY/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tYXJr/ZXRwbGFjZS5jYW52/YS5jb20vRUFHUmU4/d2wtMWsvMi8wLzE2/MDB3L2NhbnZhLWNv/bG9yZnVsLWFic3Ry/YWN0LWdyYWRpZW50/LW9ubGluZS1zaG9w/LWZyZWUtbG9nby1O/a2ltV1piWEZjTS5q/cGc",
-                onlineStatus: true,
-                shopName: "ABCXYZ",
-                garbageAmt: "5",
-                garbagePrice: "20",
-                shopAdd: "Mechogram",
-                shopEmail: "shop@gmail.com",
-            },
-            quantity: 1,
-        });
-        let loading = ref(false);
-        let amount = ref();
-        let order_id = ref();
-        let name = ref();
-        let email = ref();
-        let contact = ref();
+  name: "Payment",
+  setup() {
+    const state = reactive({
+      // UI
+      showNewForm: false,
+      savedAddresses: [] as Array<any>,
+      selectedAddress: null as number | null,
+      loadingLocation: false,
 
-        // const quantity = ref(1);
-        const price = computed(() => {
-            const pricePerKg = parseFloat(state.data.garbagePrice) || 0;
-            return state.quantity * pricePerKg;
-        });
+      // Form fields
+      name: "",
+      phone: "",
+      email: "",
+      pincode: "",
+      locality: "",
+      address: "",
+      city: "",
+      selectedState: "",
+      landmark: "",
+      altPhone: "",
 
-        const increment = () => {
-            if (state.quantity < parseInt(state.data.garbageAmt)) {
-                state.quantity++;
+      // Pickup prefs
+      deliveryTime: "",
+      instructions: "",
+      notifications: false,
+
+      // Dropdowns
+      states: ["West Bengal", "Maharashtra", "Delhi", "Karnataka", "Other"],
+      deliveryTimes: [
+        "Any time",
+        "Morning (6 AM - 9 AM)",
+        "Day (9 AM - 12 PM)",
+        "Afternoon (12 PM - 5 PM)",
+        "Evening (5 PM - 8 PM)",
+      ],
+
+      // Price details
+      quantity: 5, // in Kg
+      subtotal: 75, // ₹
+      serviceFee: 10, // ₹
+    });
+
+    const isFormDirty = computed(() => {
+      return (
+        state.name !== "" ||
+        state.phone !== "" ||
+        state.email !== "" ||
+        state.pincode !== "" ||
+        state.locality !== "" ||
+        state.address !== "" ||
+        state.city !== "" ||
+        state.selectedState !== "" ||
+        state.landmark !== "" ||
+        state.altPhone !== ""
+      );
+    });
+
+    const saveAddress = () => {
+      if (
+        !state.name ||
+        !state.phone ||
+        !state.pincode ||
+        !state.address ||
+        !state.city ||
+        !state.selectedState
+      ) {
+        window.alert("Please fill in required fields.");
+        return;
+      }
+      const newAddr = {
+        name: state.name,
+        phone: state.phone,
+        email: state.email,
+        address: state.address,
+        locality: state.locality,
+        pincode: state.pincode,
+        city: state.city,
+        state: state.selectedState,
+        landmark: state.landmark,
+        altPhone: state.altPhone,
+      };
+      state.savedAddresses.push(newAddr);
+      state.selectedAddress = state.savedAddresses.length - 1;
+      resetForm();
+      state.showNewForm = false;
+    };
+
+    const resetForm = () => {
+      state.name = "";
+      state.phone = "";
+      state.email = "";
+      state.pincode = "";
+      state.locality = "";
+      state.address = "";
+      state.city = "";
+      state.selectedState = "";
+      state.landmark = "";
+      state.altPhone = "";
+      state.deliveryTime = "";
+      state.instructions = "";
+      state.notifications = false;
+    };
+
+    // ================= USE CURRENT LOCATION =================
+    const useCurrentLocation = () => {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser.");
+        return;
+      }
+      state.loadingLocation = true;
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const { latitude, longitude } = pos.coords;
+
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+            );
+            const data = await response.json();
+
+            if (data && data.address) {
+              state.pincode = data.address.postcode || "";
+              state.locality =
+                data.address.suburb || data.address.neighbourhood || "";
+              state.address = data.display_name || "";
+              state.city =
+                data.address.city ||
+                data.address.town ||
+                data.address.village ||
+                "";
+              state.selectedState = data.address.state || "";
             }
-            // price = parseInt(state.data.garbagePrice) * state.quantity;
-        };
+          } catch (err) {
+            console.error("Error fetching location:", err);
+            alert("Unable to fetch location details.");
+          } finally {
+            state.loadingLocation = false;
+          }
+        },
+        (err) => {
+          console.error("Geolocation error:", err);
+          alert("Unable to fetch your current location.");
+          state.loadingLocation = false;
+        }
+      );
+    };
 
-        const decrement = () => {
-            if (state.quantity > 1) {
-                state.quantity--;
-            }
-            // price.value = parseInt(state.data.garbagePrice) * state.quantity;
-        };
+    const editAddress = (index: number) => {
+      const addr = state.savedAddresses[index];
+      state.name = addr.name;
+      state.phone = addr.phone;
+      state.email = addr.email || "";
+      state.address = addr.address;
+      state.locality = addr.locality || "";
+      state.pincode = addr.pincode;
+      state.city = addr.city;
+      state.selectedState = addr.state;
+      state.landmark = addr.landmark || "";
+      state.altPhone = addr.altPhone || "";
 
-        const validateQuantity = () => {
-            if (state.quantity < 1) state.quantity = 1;
-            if (state.quantity > parseInt(state.data.garbageAmt)) {
-                state.quantity = parseInt(state.data.garbageAmt);
-            }
-        };
+      state.showNewForm = true;
+      state.savedAddresses.splice(index, 1);
+      state.selectedAddress = null;
+    };
 
-        const makePayment = async () => {
-            loading.value = true;
-            const paymentDetails: Payment = {
-                amount: price.value,
-                items: state.data.shopName,
-            };
-            let response;
-            try {
-                response = await APIstore.makePayment(paymentDetails);
-                amount.value = response.amount;
-                order_id.value = response.id;
-            } catch (error) {
-                console.error("Payment failed:", error);
-            } finally {
-                loading.value = false;
-            }
-            try {
-                const response = await APIstore.userDetails();
-                name.value = response.name;
-                email.value = response.email;
-                contact.value = response.phoneNo;
-            } catch (error) {}
+    const deleteAddress = (index: number) => {
+      if (confirm("Are you sure you want to delete this address?")) {
+        state.savedAddresses.splice(index, 1);
+        if (state.selectedAddress === index) {
+          state.selectedAddress = null;
+        }
+      }
+    };
 
-            const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY,
-                amount: amount.value * 100, // Razorpay needs amount in paise
-                currency: "INR",
-                name: "Dustman",
-                description: `${state.quantity} KG`,
-                order_id: order_id.value,
-                handler: async function (response) {
-                    // ✅ Send payment verification data to your backend here
-                    console.log("Payment success", response);
-                    await APIstore.verifyPayment({
-                        payment_id: response.razorpay_payment_id,
-                        order_id: response.razorpay_order_id,
-                        signature: response.razorpay_signature,
-                    });
-                },
-                prefill: {
-                    name: name.value,
-                    email: email.value,
-                    contact: contact.value,
-                },
-                notes: {
-                    app_name: "Dustman App",
-                    app_id: "DUST-APP-01",
-                    shop_name: state.data.shopName, // Optional extra note
-                },
-                theme: {
-                    color: "#3399cc",
-                },
-            };
+    const totalAmount = computed(() => state.subtotal + state.serviceFee);
 
-            const rzp = new Razorpay(options);
-            rzp.open();
-        };
-
-        return {
-            ...toRefs(state),
-            increment,
-            decrement,
-            validateQuantity,
-            makePayment,
-            price,
-            loading,
-            // quantity,
-        };
-    },
+    return {
+      ...toRefs(state),
+      isFormDirty,
+      saveAddress,
+      resetForm,
+      useCurrentLocation,
+      totalAmount,
+      editAddress,
+      deleteAddress,
+    };
+  },
 });
 </script>
